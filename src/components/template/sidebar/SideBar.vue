@@ -3,7 +3,7 @@
     <!-- Avatar -->
     <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
     <!-- Links -->
-    <div v-for="item in kasirMenu" :key="item.link">
+    <div v-for="item in menu" :key="item.link">
       <router-link class="kasir__sidebar__link" :to="item.link">
         <i :class="item.icon"></i>
       </router-link>
@@ -14,7 +14,7 @@
 <script>
 export default {
   props: {
-    kasirMenu: Array,
+    menu: Array,
   },
 };
 </script>

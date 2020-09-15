@@ -1,0 +1,50 @@
+:root{
+  --kasir-main-color: #409EFF;
+  --admin-gudang-main-color: #00E39F;
+  --secondary: #F2F6F8;
+  --gray-color: #F8F8F8;
+  --gray-typo: #4f4f4f;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  font-family: "Poppins", sans-serif;
+  background-color: #F8F8F8;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  width: 100%;
+}
+
+/* Scrollbar */
+/* width */
+::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--secondary);
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--kasir-main-color);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--kasir-main-color);
+}

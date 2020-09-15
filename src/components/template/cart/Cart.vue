@@ -60,9 +60,6 @@ export default {
       }
     },
   },
-  mounted() {
-    console.log(this.kembalian)
-  }
 };
 </script>
 
@@ -78,7 +75,7 @@ export default {
 }
 
 .cart-items {
-  overflow: scroll;
+  overflow: auto;
 }
 
 .buyer {
@@ -101,6 +98,7 @@ export default {
 }
 
 #paying {
+  width: 100%;
   margin-top: 20px;
 }
 
