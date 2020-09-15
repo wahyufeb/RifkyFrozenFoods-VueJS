@@ -53,8 +53,7 @@ const mutations = {
     if (a.length === 0) {
       return state.keranjang.push(data);
     } else {
-      let b = state.keranjang.find(item => item.idProduct == a.idProduct);
-      console.log(b)
+      state.keranjang.find(item => item.idProduct == a.idProduct);
     }
   }
 };

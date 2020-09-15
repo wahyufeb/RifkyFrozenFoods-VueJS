@@ -1,7 +1,7 @@
 const state = {
   menu: [
     { link: 'kasir-app', icon: 'el-icon-shopping-cart-2' },
-    { link: 'stok-barang', icon: 'el-icon-box' },
+    { link: 'kasir-stok-barang', icon: 'el-icon-box' },
     { link: 'penjualan-kasir', icon: 'el-icon-document' },
   ],
 };

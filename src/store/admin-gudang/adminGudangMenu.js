@@ -5,6 +5,7 @@ const state = {
     { link: 'daftar-kios', icon: 'el-icon-s-shop' },
     { link: 'penjualan-kasir-gudang', icon: 'el-icon-document' },
   ],
+
 };
 
 const getters = {
