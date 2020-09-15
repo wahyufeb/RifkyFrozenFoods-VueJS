@@ -1,9 +1,9 @@
 <template>
-  <div class="kasir">
+  <div class="wrapper">
     <el-row>
       <el-col :sm="2" :md="2" :lg="2" :xl="2">
         <!-- sidebar -->
-        <NavBar :kasirMenu="kasirMenu"/>
+        <Sidebar :menu="kasirMenu"/>
       </el-col>
       <el-col :xs="24" :sm="20" :md="21" :lg="21" :xl="21">
         <slot/> 
@@ -14,8 +14,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-
-import NavBar from '@/components/template/sidebar/SideBar.vue';
+import Sidebar from '@/components/template/sidebar/SideBar.vue';
 
 export default {
   name: 'LayoutKasir',
@@ -23,13 +22,13 @@ export default {
     ...mapGetters(['kasirMenu']),
   },
   components: {
-    NavBar,
+    Sidebar,
   }
 };
 </script>
 
 <style>
-.kasir {
+.wrapper {
   box-sizing: border-box;
   /* overflow-x: hidden; */
 }

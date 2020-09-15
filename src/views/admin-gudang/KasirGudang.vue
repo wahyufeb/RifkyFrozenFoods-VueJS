@@ -3,7 +3,7 @@
     <el-row>
       <el-col :lg="16">
         <div class="main-content__title">
-          Aplikasi Kasir
+          Aplikasi Kasir Gudang
         </div>
         <div class="main-content__content">
           <Search title="Cari Barang" />
@@ -31,7 +31,7 @@ import ProductList from '@/components/template/product/ProductList.vue';
 import Cart from '@/components/template/cart/Cart.vue';
 
 export default {
-  name: 'Kasir',
+  name: 'KasirGudang',
   components: {
     Search,
     ProductCategory,

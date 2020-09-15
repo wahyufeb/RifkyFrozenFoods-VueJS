@@ -7,6 +7,12 @@ import Kasir from '../views/kasir/Kasir.vue';
 import StokBarang from '../views/kasir/StokBarang.vue';
 import Penjualan from '../views/kasir/Penjualan.vue';
 
+// Admin Gudang View
+import DaftarKios from '../views/admin-gudang/DaftarKios.vue';
+import KasirGudang from '../views/admin-gudang/KasirGudang.vue';
+import PenjualanGudang from '../views/admin-gudang/PenjualanGudang.vue';
+import StokBarangGudang from '../views/admin-gudang/StokBarangGudang.vue';
+
 // Layout
 import LayoutKasir from '../layouts/LayoutKasir.vue';
 import LayoutAdminGudang from '../layouts/LayoutAdminGudang.vue';
@@ -18,7 +24,6 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
-    meta: { layout: LayoutAdminGudang },
   },
   {
     path: '/kasir-app',
@@ -27,7 +32,7 @@ const routes = [
     meta: { layout: LayoutKasir },
   },
   {
-    path: '/stok-barang',
+    path: '/kasir-stok-barang',
     component: StokBarang,
     meta: { layout: LayoutKasir },
   },
@@ -35,6 +40,26 @@ const routes = [
     path: '/penjualan-kasir',
     component: Penjualan,
     meta: { layout: LayoutKasir },
+  },
+  {
+    path: '/kasir-gudang',
+    component: KasirGudang,
+    meta: { layout: LayoutAdminGudang },
+  },
+  {
+    path: '/stok-barang-gudang',
+    component: StokBarangGudang,
+    meta: { layout: LayoutAdminGudang },
+  },
+  {
+    path: '/daftar-kios',
+    component: DaftarKios,
+    meta: { layout: LayoutAdminGudang },
+  },
+  {
+    path: '/penjualan-kasir-gudang',
+    component: PenjualanGudang,
+    meta: { layout: LayoutAdminGudang },
   },
 ];
 
