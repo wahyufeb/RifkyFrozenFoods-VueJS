@@ -1,11 +1,23 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import kasirMenu from './kasir/kasirMenu.js';
-import adminGudangMenu from './admin-gudang/adminGudangMenu.js';
-import kategoriProoduk from './produk/kategoriProduk.js';
-import produk from './produk/produk.js';
-import keranjang from './keranjang/keranjang.js';
+// Menu
+import kasirMenu from './kasir/kasirMenuStore.js';
+import adminGudangMenu from './admin-gudang/adminGudangMenuStore.js';
+import adminMenu from './admin/adminMenuStore.js';
+
+// Produk
+import produk from './produk/produkStore.js';
+import kategoriProoduk from './produk/kategoriProdukStore.js';
+
+// Keranjang
+import keranjang from './keranjang/keranjangStore.js';
+
+// Accounts
+import login from './accounts/loginStore.js';
+
+// Income
+import income from './income/incomeStore.js';
 
 Vue.use(Vuex);
 
@@ -14,9 +26,12 @@ const createStore = () => {
     modules: {
       kasirMenu,
       adminGudangMenu,
+      adminMenu,
       kategoriProoduk,
       produk,
       keranjang,
+      login,
+      income,
     },
   });
 };
