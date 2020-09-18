@@ -1,7 +1,14 @@
 <template>
   <div class="jumbotron">
     <div class="jumbotron__title">{{ title }} :</div>
-    <div class="jumbotron__data">{{ toRp(data) }}</div>
+    <div class="jumbotron__data">
+      <div v-if="formatRupiah" :class="{adminColor:isAdmin}">
+        Rp{{ toRp(data) }}
+      </div>
+      <div v-else :class="{adminColor:isAdmin}">
+        {{ toRp(data) }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -12,7 +19,9 @@ export default {
   name: 'Jumbotron',
   props: {
     title: String,
-    data: String,
+    data: Number,
+    formatRupiah: Boolean,
+    isAdmin: Boolean
   },
   computed: {
     toRp() {
@@ -30,7 +39,11 @@ export default {
   background-color: var(--secondary);
   padding: 20px;
   border-radius: 10px;
-  text-align: center;
+  text-align: left;
+}
+
+.adminColor {
+  color: var(--admin-gudang-main-color);
 }
 
 .jumbotron__title {

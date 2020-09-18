@@ -8,25 +8,45 @@
         </el-button>
       </div>
     </div>
+    <div v-if="isAdmin">
+      <el-button id="isAdmin" type="success" @click="addCategoryProduct">Tambah Kategori</el-button>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import Search from '@/components/template/search/Search.vue';
 
 export default {
   name: 'ProductCategorySidebar',
+  props: {
+    isAdmin: Boolean,
+    addCategory: Function,
+  },
   components: {
     Search,
   },
   computed: {
     ...mapGetters(['kategoriProduk'])
   },
+  methods: {
+    ...mapActions(['productCategories']),
+    addCategoryProduct() {
+      this.addCategory();
+    }
+  },
+  mounted() {
+    this.productCategories();
+  },
 };
 </script>
 
 <style scoped>
+#isAdmin {
+  width: 100%;
+}
+
 .product-category {
   background-color: var(--gray-color);
   padding: 10px;
@@ -57,13 +77,13 @@ export default {
 
 @media only screen and (max-height: 630px) {
   .product-category-data {
-    height: 270px;
+    height: 230px;
   }
 }
 
 @media only screen and (min-height: 630px) {
   .product-category-data {
-    height: 370px;
+    height: 330px;
   }
 }
 

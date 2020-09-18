@@ -25,6 +25,10 @@
               <el-input style="width:140px" v-model="uangKembalian" :disabled="true"></el-input>
             </div>
           </div>
+          <div class="cart__total">
+            <div>Total</div>
+            <div id="total-cart">Rp{{ toRp(totalCart) }}</div>
+          </div>
           <el-button id="paying" type="primary">Bayar Sekarang</el-button>
         </div>    
       </div>
@@ -37,6 +41,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import convertRp from '@/helper/convertRupiah.js';
 import CartItem from '@/components/template/cart/CartItem';
 
 export default {
@@ -54,12 +59,19 @@ export default {
     uangKembalian() {
       let kembalian = this.uangPembeli - this.totalCart
       if (kembalian < 0) {
-        return `Kurang ${kembalian * (-1)}`
+        let totalKembalian = this.toRp(kembalian * (-1));
+        return `Kurang Rp${totalKembalian}`
       } else {
-        return kembalian;
+        let totalKembalian = this.toRp(kembalian);
+        return `Rp${totalKembalian}`;
       }
     },
   },
+  methods : {
+    toRp(val){
+      return convertRp(val);
+    },
+  }
 };
 </script>
 
@@ -92,9 +104,22 @@ export default {
   font-weight: 500;
 }
 
+.cart__total {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--gray-typo);
+  margin: 5px 0;
+}
+
 .cart-empty {
   color: var(--gray-typo);
   text-align: center;
+}
+#total-cart {
+  color: var(--kasir-main-color);
 }
 
 #paying {

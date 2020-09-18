@@ -4,7 +4,7 @@
       <div class="sales__data__filter">
         <div id="picker">
           <el-date-picker
-            v-model="value1"
+            v-model="datePickerValue"
             type="daterange"
             align="right"
             unlink-panels
@@ -15,7 +15,7 @@
           </el-date-picker>
         </div>
         <div v-if="warehouseMode">
-          <el-select v-model="select" slot="prepend" placeholder="Select">
+          <el-select v-model="selectValue" slot="prepend" placeholder="Select">
             <el-option label="Restaurant" value="1"></el-option>
             <el-option label="Order No." value="2"></el-option>
             <el-option label="Tel" value="3"></el-option>
@@ -24,7 +24,7 @@
       </div>
       <div class="sales__data__buttons">
         <div>
-          <el-button type="danger">Reset</el-button>
+          <el-button type="danger" @click="filterReset">Reset</el-button>
         </div>
         <div>
           <el-button type="primary">Urutkan</el-button>
@@ -80,9 +80,15 @@ export default {
           }
         }]
       },
-      value1: '',
-      select:''
+      datePickerValue: '',
+      selectValue:''
     };
+  },
+  methods: {
+    filterReset() {
+      this.datePickerValue = '';
+      this.selectValue = '';
+    }
   }
 };
 </script>
