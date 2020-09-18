@@ -6,7 +6,7 @@
     <div class="main-content__content">
       <el-row>
         <el-col :lg="4">
-          <Jumbotron title="Total Produk" data="500" />
+          <Jumbotron title="Total Produk" data="500" :formatRupiah="false"/>
         </el-col>
         <el-col :lg="4" :offset="1">          
           <el-button type="primary" @click="open">

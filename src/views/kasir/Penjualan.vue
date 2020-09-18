@@ -6,7 +6,7 @@
     <div class="main-content__content">
       <el-row>
         <el-col :lg="5">
-          <Jumbotron title="Pendapatan Hari Ini" data="2500000" />
+          <Jumbotron title="Pendapatan Hari Ini" data="2500000" :formatRupiah="true"/>
         </el-col>
       </el-row>
       <div class="sales">

@@ -7,6 +7,10 @@ import 'element-ui/lib/theme-chalk/display.css';
 import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
 
+// Mixins
+import titleMixin from './mixins/titleMixins.js';
+
+Vue.mixin(titleMixin);
 Vue.config.productionTip = false;
 locale.use(lang);
 
