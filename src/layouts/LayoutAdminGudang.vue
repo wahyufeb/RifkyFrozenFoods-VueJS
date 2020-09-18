@@ -13,7 +13,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import { setDecryptCookie } from '@/helper/setCookie.js';
 import Sidebar from '@/components/template/sidebar/SideBar.vue';
 
 export default {
@@ -21,8 +22,27 @@ export default {
   components: {
     Sidebar,
   },
-  computed: {
-    ...mapGetters(['adminGudangMenu'])
+  computed:{
+    ...mapGetters(['adminGudangMenu', 'userData']),
+  },
+  methods: {
+    ...mapActions(['authorization', 'refreshTokenProcess'])
+  },
+  mounted(){
+    if(this.userData.length === 0){
+      let dataId = setDecryptCookie('ID', null);
+      let refreshToken = setDecryptCookie('REFRESH_TOKEN', null);
+      this.authorization(dataId)
+      .then((data) => {
+        if(data.code !== 200){
+          this.refreshTokenProcess(refreshToken)
+        }else{
+          this.fullscreenLoading = false
+        }
+      })
+    }else{
+      this.fullscreenLoading = false;
+    }
   },
 };
 </script>

@@ -1,11 +1,14 @@
 <template>
   <div class="wrapper">
-    <el-row>
-      <el-col :sm="2" :md="2" :lg="2" :xl="2">
+    <div v-if="fullscreenLoading">
+      <div v-loading.fullscreen.lock="fullscreenLoading"></div>
+    </div>
+    <el-row v-else>
+      <el-col :sm="5" :md="5" :lg="5" :xl="5">
         <!-- sidebar -->
-        <Sidebar :menu="kasirMenu" :photo="userData.photo" :username="userData.username"/>
+        <SidebarAdmin :menu="adminMenu" :photo="userData.photo" :username="userData.username"/>
       </el-col>
-      <el-col :xs="24" :sm="20" :md="21" :lg="21" :xl="21">
+      <el-col :xs="18" :sm="18" :md="18" :lg="18" :xl="18">
         <slot/> 
       </el-col>
     </el-row>
@@ -15,15 +18,20 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { setDecryptCookie } from '@/helper/setCookie.js';
-import Sidebar from '@/components/template/sidebar/SideBar.vue';
+import SidebarAdmin from '@/components/template/sidebar/SidebarAdmin.vue';
 
 export default {
-  name: 'LayoutKasir',
-  components: {
-    Sidebar,
+  name: 'LayoutAdminGudang',
+  data() {
+    return {
+      fullscreenLoading: true,
+    }
   },
-  computed:{
-    ...mapGetters(['kasirMenu', 'userData']),
+  components: {
+    SidebarAdmin,
+  },
+  computed: {
+    ...mapGetters(['adminMenu', 'userData'])
   },
   methods: {
     ...mapActions(['authorization', 'refreshTokenProcess'])
