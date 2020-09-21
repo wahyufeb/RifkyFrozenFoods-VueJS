@@ -11,6 +11,11 @@ const getters = {
   produkList: state => {
     return state.produk
   },
+  selectedProduct(state) {
+    return (dataId) => {
+      return state.produk.find((productItem) => productItem.id_product === dataId)
+    }
+  },
   kodeProduk: state => {
     let filteredProduk = []
     state.produk.filter((data) => {
@@ -43,8 +48,10 @@ const actions = {
     }
     return resProducts;
   },
-  async createProductProcess({ commit, dispatch }, data) {
+  async saveProductProcess({ commit, dispatch }, data) {
     const { name, image, total_perunit, id_product_category } = data.dataProduct;
+
+    let id = data.dataId;
     let formProduct = new FormData();
 
     formProduct.append('name', name);
@@ -58,35 +65,67 @@ const actions = {
         Authorization: `Bearer ${token}`
       }
     };
-    const reqCreateProduct = await axios.post(`${process.env.VUE_APP_BASE_API}/products/create`, formProduct, headerConfig);
-    const resCreateProduct = await reqCreateProduct.data;
+
+    let type = ''
+    id !== 0 ? type = `${id}/update` : type = 'create'
+    const reqSaveProduct = await axios.post(`${process.env.VUE_APP_BASE_API}/products/${type}`, formProduct, headerConfig);
+    const resSaveProduct = await reqSaveProduct.data;
 
     const { priceCategory } = data.dataPrice;
-    await priceCategory.map(priceItem => {
-      const data = {
-        id_product: resCreateProduct.data.id_product,
-        name: priceItem.name,
-        price: priceItem.price
+
+    priceCategory.map(priceItem => {
+      let data = ''
+      if (id !== 0) {
+        data = {
+          dataPrice: {
+            id_product: id,
+            name: priceItem.name,
+            price: priceItem.price,
+          },
+        }
+      } else {
+        data = {
+          dataPrice: {
+            id_product: resSaveProduct.data.id_product,
+            name: priceItem.name,
+            price: priceItem.price,
+          },
+          dataId: id
+        }
       }
-      dispatch('createPriceCategoryProcess', data);
+      dispatch('savePriceCategory', data);
     });
-    commit('setProductCreated', resCreateProduct.data)
-    return resCreateProduct;
+    if (id !== 0) {
+      commit('setProductUpdated', resSaveProduct.data)
+    } else {
+      commit('setProductCreated', resSaveProduct.data)
+    }
+    return resSaveProduct;
   },
-  async createPriceCategoryProcess({ commit }, data) {
+  // eslint-disable-next-line no-unused-vars
+  async savePriceCategory({ commit }, data) {
+    const { id_product, name, price } = data.dataPrice;
+    let id = data.dataId
     let token = setDecryptCookie('TOKEN', null);
     let headerConfig = {
       headers: {
         Authorization: `Bearer ${token}`
       }
     };
-    const reqCreateCategory = await axios.post(`${process.env.VUE_APP_BASE_API}/price-category/create`, {
-      id_product: data.id_product,
-      name: data.name,
-      price: data.price
+
+    let type = ''
+    id !== 0 ? type = `${id_product}/update` : type = 'create'
+    const reqSavePriceCategory = await axios.post(`${process.env.VUE_APP_BASE_API}/price-category/${type}`, {
+      id_product,
+      name,
+      price,
     }, headerConfig);
-    const resCreateCategory = await reqCreateCategory.data;
-    commit('coba', resCreateCategory);
+    const resSavePriceCateogry = await reqSavePriceCategory.data;
+    if (id !== 0) {
+      commit('setPriceProductUpdated', resSavePriceCateogry.data);
+    } else {
+      commit('setPriceProductCreated', resSavePriceCateogry.data);
+    }
   },
   async deleteProductProcess({ commit }, id_product) {
     let token = setDecryptCookie('TOKEN', null);
@@ -103,8 +142,19 @@ const actions = {
 };
 
 const mutations = {
-  coba(state, data) {
-    console.log(data)
+  setPriceProductCreated(state, data) {
+    let getProductId = state.produk.find((item) => item.id_product === data.id_product);
+    getProductId.price.push(data)
+  },
+  setPriceProductUpdated(state, data) {
+    let getProductId = state.produk.find((item) => item.id_product === data.id_product);
+    if (getProductId.price.length === 1) {
+      return getProductId.price = [...getProductId.price, data];
+    }
+    if (getProductId.price.length > 1) {
+      getProductId.price = [];
+      return getProductId.price.push(data)
+    }
   },
   setProductLoaded(state, data) {
     state.produk = data;
@@ -112,16 +162,25 @@ const mutations = {
   setProductCreated(state, data) {
     state.produk.push(data)
   },
+  setProductUpdated(state, data) {
+    let getProdukId = state.produk.find((item) => item.id_product === data.id_product)
+    getProdukId.name = data.name;
+    getProdukId.image = data.image;
+    getProdukId.total_perunint = data.total_perunint;
+    getProdukId.price = data.price;
+    getProdukId.category = data.category;
+  },
   setCategory(state, category) {
     state.produk.filter((data) => data.category === category);
   },
   setProductDeleted(state, id_product) {
     state.produk = state.produk.filter((item) => item.id_product !== id_product)
   },
+  // eslint-disable-next-line no-unused-vars
   setProduct(getters, keyword) {
     // console.log(state)
-    console.log(keyword)
-    console.log(this.$store)
+    // console.log(keyword)
+    // console.log(this.$store)
 
     // CALL API PENCARIAN
 

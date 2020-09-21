@@ -22,16 +22,16 @@
           <ProductCategorySidebar :isAdmin="true" :addCategory="addCategory"/>
         </el-col>
         <el-col :lg="18" :offset="1">
-          <ProductListDetail :isAdmin="true"/>
+          <ProductListDetail :isAdmin="true" :editProduct="editProduct"/>
         </el-col>
       </el-row>  
     </div>
     <el-dialog
-      title="Tambahkan Produk"
+      :title="titleDialog"
       :visible.sync="centerDialogVisible"
       width="35%"
       center>
-      <AddProduct :handleDialogVisible="handleDialogVisible" :handleLoadingData="handleLoadingData"/>
+      <AddProduct :handleDialogVisible="handleDialogVisible" :handleLoadingData="handleLoadingData" :productId="productId"/>
     </el-dialog>
   </div>
 </template>
@@ -54,15 +54,24 @@ export default {
   data() {
     return {
       centerDialogVisible: false,
+      productId: '',
+      titleDialog:''
     }
   },
   methods: {
     addCategory() {
       alert("Add Category")
     },
-    handleDialogVisible() {
+    editProduct(params) {
+      this.productId = params;
+      this.titleDialog = 'Edit Data Produk'
       return this.centerDialogVisible  = !this.centerDialogVisible;
     },
+    handleDialogVisible() {
+      this.titleDialog = 'Tambahkan Produk'
+      this.productId = 0;
+      return this.centerDialogVisible  = !this.centerDialogVisible;
+    },           
     handleLoadingData(params) {
       return this.loadingData = params;
     },

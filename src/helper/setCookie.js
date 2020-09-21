@@ -4,6 +4,10 @@ import CryptoJS from "crypto-js";
 const SECRET_KEY = "qwertyuiopasdfghjklzxcvbnm123456789RIfkyFrozenFoods";
 
 const setEncryptCookie = (cookieName, data) => {
+  console.log(typeof data)
+  if (typeof data == undefined) {
+    document.location.reload()
+  }
   if (typeof data === "object") {
     let encryptdata = CryptoJS.AES.encrypt(
       JSON.stringify(data).toString(),
