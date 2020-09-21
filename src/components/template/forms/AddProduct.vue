@@ -8,7 +8,7 @@
         <el-input placeholder="Nama Produk" v-model="formData.name"></el-input>
       </el-form-item>
       <el-form-item>
-        <div v-if="productId !== 0">
+        <div v-if="productId !== 0" class="image-uploaded">
           <img :src="imageData(formData.image)" :alt="formData.name">
         </div>
       </el-form-item>
@@ -112,8 +112,8 @@ export default {
         image: '',
         total_perunit: '',
         priceCategory: [
-          {name: 'eceran', price: ''},
           {name: 'grosir', price: ''},
+          {name: 'eceran', price: ''},
         ],
         category: ''
       },
@@ -134,8 +134,8 @@ export default {
       this.formData.name = name;
       this.formData.image = image;
       this.formData.total_perunit = total_perunit;
-      this.formData.priceCategory = price;
       this.formData.category = category.id_product_category;
+      this.formData.priceCategory = price;
     },
     // Aliases method
       imageData(img) {
@@ -237,6 +237,18 @@ export default {
 <style scoped>
 .form-item {
   padding: 5px;
+}
+
+.image-uploaded {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.image-uploaded img {
+  width:300px;
+  height: 300px;
+  object-fit: cover;
 }
 
 button {

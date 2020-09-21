@@ -101,7 +101,7 @@ export default {
     deleteProduct(params) {
       this.deleteProductProcess(params).
       then((response) => {
-        if(response.code === 204){
+        if(response.deleteProduct.code === 204 && response.deletePriceCategory.code === 204){
           this.$notify({
             title: 'Success',
             message: 'Berhasil menghapus produk',

@@ -82,6 +82,7 @@ const actions = {
             name: priceItem.name,
             price: priceItem.price,
           },
+          dataId: id
         }
       } else {
         data = {
@@ -120,11 +121,11 @@ const actions = {
       name,
       price,
     }, headerConfig);
-    const resSavePriceCateogry = await reqSavePriceCategory.data;
+    const resSavePriceCategory = await reqSavePriceCategory.data;
     if (id !== 0) {
-      commit('setPriceProductUpdated', resSavePriceCateogry.data);
+      commit('setPriceProductUpdated', resSavePriceCategory.data);
     } else {
-      commit('setPriceProductCreated', resSavePriceCateogry.data);
+      commit('setPriceProductCreated', resSavePriceCategory.data);
     }
   },
   async deleteProductProcess({ commit }, id_product) {
@@ -135,9 +136,14 @@ const actions = {
       }
     };
     const reqDeleteProduct = await axios.delete(`${process.env.VUE_APP_BASE_API}/products/${id_product}/delete`, headerConfig);
+    const reqDeletePriceCategory = await axios.delete(`${process.env.VUE_APP_BASE_API}/price-category/${id_product}/delete`, headerConfig);
     const resDeleteProduct = await reqDeleteProduct.data;
+    const resDeletePriceCategory = await reqDeletePriceCategory.data
     commit('setProductDeleted', id_product);
-    return resDeleteProduct;
+    return {
+      deleteProduct: resDeleteProduct,
+      deletePriceCategory: resDeletePriceCategory
+    };
   }
 };
 
@@ -147,28 +153,28 @@ const mutations = {
     getProductId.price.push(data)
   },
   setPriceProductUpdated(state, data) {
-    let getProductId = state.produk.find((item) => item.id_product === data.id_product);
-    if (getProductId.price.length === 1) {
-      return getProductId.price = [...getProductId.price, data];
-    }
-    if (getProductId.price.length > 1) {
-      getProductId.price = [];
-      return getProductId.price.push(data)
-    }
+    let resultProduc = state.produk.find(item => item.id_product === data.id_product)
+    let resultPrice = resultProduc.price.find(item => item.name === data.name);
+    resultPrice.name = data.name
+    resultPrice.price = data.price
   },
   setProductLoaded(state, data) {
     state.produk = data;
   },
   setProductCreated(state, data) {
+    console.log(data)
     state.produk.push(data)
   },
   setProductUpdated(state, data) {
-    let getProdukId = state.produk.find((item) => item.id_product === data.id_product)
+    let getProdukId = state.produk.find((item) => item.id_product === data.id_product);
     getProdukId.name = data.name;
     getProdukId.image = data.image;
-    getProdukId.total_perunint = data.total_perunint;
+    getProdukId.total_perunit = data.total_perunit;
     getProdukId.price = data.price;
-    getProdukId.category = data.category;
+    getProdukId.category = {
+      id_product_category: data.category.id_product_category,
+      name: data.category.name
+    };
   },
   setCategory(state, category) {
     state.produk.filter((data) => data.category === category);

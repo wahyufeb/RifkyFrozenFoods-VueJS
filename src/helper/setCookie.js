@@ -5,7 +5,8 @@ const SECRET_KEY = "qwertyuiopasdfghjklzxcvbnm123456789RIfkyFrozenFoods";
 
 const setEncryptCookie = (cookieName, data) => {
   console.log(typeof data)
-  if (typeof data == undefined) {
+  if (typeof data == undefined || String) {
+    alert("RELOAD HALAMAN PLS")
     document.location.reload()
   }
   if (typeof data === "object") {
