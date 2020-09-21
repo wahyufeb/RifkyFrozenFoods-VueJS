@@ -2,7 +2,7 @@
   <div class="product-list-detail">
     <el-row v-loading="loadingData">
       <div v-if="isAdmin">
-        <el-col class="product-list-detail__item" v-for="produk in produkList" :key="produk.id_product">
+        <el-col class="product-list-detail__item" v-for="(produk, i) in produkList" :key="i+1">
           <div class="product-list-detail__item__image">
             <img :src="imageData(produk.image)" :alt="produk.id_product">
             <div class="product-list-detail__data">
@@ -25,14 +25,14 @@
               title="Detail Produk"
               width="250"
               trigger="hover">
-              <div v-for="priceItem in produk.price" :key="priceItem.id_price_category">
+              <div v-for="(priceItem, i) in produk.price" :key="i+1">
                 <p>Harga {{priceItem.name}} : Rp{{ toRp(priceItem.price) }}</p>
               </div>
               <el-button type="info" slot="reference">
                 <i class="el-icon-info"></i>
               </el-button>
             </el-popover>
-            <el-button type="primary" @click="editProduct(produk.id_product)">
+            <el-button type="primary" @click="editProductData(produk.id_product)">
               <i class="el-icon-edit-outline"></i>
             </el-button>
             <el-button type="danger" @click="deleteProduct(produk.id_product)">
@@ -42,7 +42,7 @@
         </el-col>
       </div>
       <div v-else>
-        <el-col class="product-list-detail__item" v-for="produk in produkList" :key="produk.id_product">
+        <el-col class="product-list-detail__item" v-for="(produk, i) in produkList" :key="i+1">
           <div class="product-list-detail__item__image">
             <img :src="imageData(produk.image)" :alt="produk.id_product">
             <div class="product-list-detail__data">
@@ -59,7 +59,7 @@
               </div>
             </div>
           </div>
-          <div class="product-list-detail__price" v-for="priceItem in produk.price" :key="priceItem.id_price_category">
+          <div class="product-list-detail__price" v-for="(priceItem, i) in produk.price" :key="i+1">
             Rp {{ toRp(priceItem.price) }}
           </div>
         </el-col>
@@ -76,6 +76,7 @@ export default {
   name: 'ProductListDetail',
   props: {
     isAdmin: Boolean,
+    editProduct: Function,
   },
   data() {
     return {
@@ -94,20 +95,8 @@ export default {
       // eslint-disable-next-line no-undef
       return `${process.env.VUE_APP_API_RESOURCE}/uploads/products/${photo}`
     },
-    detailProduct(params) {
-      alert(params)
-      this.$alert('This is a message', 'Title', {
-        confirmButtonText: 'OK',
-        callback: action => {
-          this.$message({
-            type: 'info',
-            message: `action: ${ action }`
-          });
-        }
-      });
-    },
-    editProduct(params) {
-      alert(params)
+    editProductData(params) {
+      this.editProduct(params)
     },
     deleteProduct(params) {
       this.deleteProductProcess(params).
@@ -130,7 +119,7 @@ export default {
   created() {
     this.getProducts()
     .then((response) => {
-      if(response.code === 200){
+      if(response.code === 200 || response.code === 404){
         this.loadingData = false;
       }
     })

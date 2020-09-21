@@ -3,8 +3,14 @@
     <el-form label-position="top" :model="formData" :rules="rules" ref="formData">
       <el-form-item class="form-item"
       prop="name"
+      label="Nama Produk"
       :rules="rules.name">
         <el-input placeholder="Nama Produk" v-model="formData.name"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <div v-if="productId !== 0">
+          <img :src="imageData(formData.image)" :alt="formData.name">
+        </div>
       </el-form-item>
       <el-form-item class="form-item" label="Upload Foto Produk">
         <el-upload
@@ -44,12 +50,12 @@
         </el-upload>
       </el-form-item>
       <el-dialog :visible.sync="dialogVisible">
-        <img width="100%" :src="dialogImageUrl" alt="">
+        <img width="100%" :src="dialogImageUrl" alt="dialog">
       </el-dialog>
-        Kategori Harga
       <el-row>
         <el-col class="form-item" :lg="12" v-for="(categoryItem, i) in formData.priceCategory" :key="i+1">
           <el-form-item
+          :label="hargaKategori(categoryItem.name)"
           prop="total_perunit">
             <el-input type="number" :placeholder="categoryItem.name" v-model="categoryItem.price"></el-input>
           </el-form-item>
@@ -58,6 +64,7 @@
       <el-row>
         <el-col class="form-item" :lg="12">
           <el-form-item
+          label="Jumlah produk per dus"
           prop="total_perunit">
             <el-input type="number" placeholder="Masukan Total Per Dus" v-model="formData.total_perunit"></el-input>
           </el-form-item>
@@ -66,11 +73,13 @@
           <el-form-item
           style="width:100%"
           prop="category"
+          label="Kategori produk"
           :rules="rules.category">
             <el-select v-model="formData.category" placeholder="Pilih Kategori">
+            
               <el-option
-                v-for="item in kategoriProduk"
-                :key="item.id_product_category"
+                v-for="(item, i) in kategoriProduk"
+                :key="i+1"
                 :label="item.name"
                 :value="item.id_product_category">
               </el-option>
@@ -78,7 +87,8 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-button type="primary" @click="submitAddProduct()">Tambah Produk</el-button>
+      <el-button v-if="productId !== 0" type="primary" @click="submitDataProduct(productId)">Update Produk</el-button>
+      <el-button v-else type="primary" @click="submitDataProduct(productId)">Tambah Produk</el-button>
     </el-form>
   </div>
 </template>
@@ -90,6 +100,7 @@ export default {
   props: {
     handleDialogVisible: Function,
     handleLoadingData: Function,
+    productId: Number,
   },
   data() {
     return {
@@ -114,19 +125,41 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['kategoriProduk'])
+    ...mapGetters(['kategoriProduk', 'selectedProduct']),
   }, 
   methods: {
-    ...mapActions(['createProductProcess']),
+    ...mapActions(['saveProductProcess']),
+    setupUpdateProduct(productId) {
+      const {name, image, total_perunit, price, category } = this.selectedProduct(productId)
+      this.formData.name = name;
+      this.formData.image = image;
+      this.formData.total_perunit = total_perunit;
+      this.formData.priceCategory = price;
+      this.formData.category = category.id_product_category;
+    },
+    // Aliases method
+      imageData(img) {
+        // eslint-disable-next-line no-undef
+        return `${process.env.VUE_APP_API_RESOURCE}/uploads/products/${img}`
+      },
+      hargaKategori(name) {
+        return `Harga ${name}:`;
+      },
+    // =============
     handleRemove(file) {
-      console.log(file);
+      return this.$refs['photo'].uploadFiles = this.$refs['photo'].uploadFiles.filter((item) => item.uid !== file.uid)
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
     handleDownload(file) {
-      console.log(file);
+      var link = document.createElement('a');
+      link.href = file.url;
+      link.download = file.name;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     },
     closeModalDialog() {
       this.handleDialogVisible();
@@ -134,52 +167,70 @@ export default {
     handleLoading(params) {
       return this.handleLoadingData(params);
     },
-    submitAddProduct() {
-
+    submitDataProduct(productId) {
       const dataProduct = {
         name: this.formData.name,
         image: this.$refs['photo'].uploadFiles[0].raw,
         total_perunit: this.formData.total_perunit,
         id_product_category: this.formData.category,
       }
-
       const dataPrice = {
         priceCategory:this.formData.priceCategory
       }
-
       const data = {
         dataProduct,
-        dataPrice
+        dataPrice,
+        dataId: productId,
       }
-
-      this.createProductProcess(data)
+      this.saveProductProcess(data)
       .then((response) => {
         if(response.code !== 201){          
           this.$notify.error({
             title: 'Error',
-            message: 'Produk Gagal ditambahkan',
+            message: response.message,
             offset: 100
           });
         }else{          
           this.$notify.success({
             title: 'Success',
-            message: 'Produk Berhasil ditambahkan',
+            message: response.message,
             offset: 100
           });
         }
-        this.closeModalDialog();
-        this.formData.name = '';
-        this.formData.image = ''
-        this.formData.total_perunit =  '';
-        this.formData.priceCategory = [
-          {name: 'eceran', price: ''},
-          {name: 'grosir', price: ''},
-        ];
-        this.formData.category = '';
-        this.$refs['photo'].uploadFiles[0].raw = ''
       })
+      this.formData.name = '';
+      this.formData.image = ''
+      this.formData.total_perunit =  '';
+      this.formData.priceCategory = [
+        {name: 'eceran', price: ''},
+        {name: 'grosir', price: ''},
+      ];
+      this.formData.category = '';
+      this.closeModalDialog();
+      this.$refs['photo'].uploadFiles = []
     },
   },
+  watch: {
+    productId: function(productId) {      
+      if(productId !== 0){
+        this.setupUpdateProduct(productId)
+      }else{
+        this.formData.name = '';
+        this.formData.image = '';
+        this.formData.total_perunit = '';
+        this.formData.priceCategory = [
+            {name: 'eceran', price: ''},
+            {name: 'grosir', price: ''},
+          ];
+        this.formData.category = '';
+      }
+    }
+  },
+  mounted() {
+    if(this.productId !== 0) {
+      this.setupUpdateProduct(this.productId)
+    }
+  }
 }
 </script>
 
