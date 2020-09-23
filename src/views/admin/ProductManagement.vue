@@ -15,14 +15,14 @@
         </el-col>
       </el-row>
       <div class="detail-store">
-        Barang yang ada di Gudang  
+        Daftar Produk  
       </div>
-      <el-row >
+      <el-row v-loading="loadingData">
         <el-col :lg="5">
-          <ProductCategorySidebar :isAdmin="true" :addCategory="addCategory"/>
+          <ProductCategorySidebar :isAdmin="true" :handleLoadingData="handleLoadingData"/>
         </el-col>
         <el-col :lg="18" :offset="1">
-          <ProductListDetail :isAdmin="true" :editProduct="editProduct"/>
+          <ProductListDetail :isAdmin="true" :editProduct="editProduct" :handleLoadingData="handleLoadingData"/>
         </el-col>
       </el-row>  
     </div>
@@ -55,13 +55,11 @@ export default {
     return {
       centerDialogVisible: false,
       productId: '',
-      titleDialog:''
+      titleDialog:'',
+      loadingData: true
     }
   },
   methods: {
-    addCategory() {
-      alert("Add Category")
-    },
     editProduct(params) {
       this.productId = params;
       this.titleDialog = 'Edit Data Produk'

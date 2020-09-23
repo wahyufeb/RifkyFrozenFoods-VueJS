@@ -1,15 +1,11 @@
 <template>
   <!-- <el-input    ></el-input> -->
   <div id="search">
-    <el-autocomplete
-    prefix-icon="el-icon-search"
+  <el-input
     :placeholder="title"
-    v-model="keyword"
-    class="inline-input"
-    :fetch-suggestions="querySearch"
-    @select="handleSelect"
-    :trigger-on-focus="false"
-  ></el-autocomplete>
+    v-model="keyword" @change="searchDataProduct">
+    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+  </el-input>
   </div>
 </template>
 
@@ -23,37 +19,18 @@ export default {
   },
   data() {
     return {
-      keyword: '',
-      produk:[],
+      keyword: ''
     };
   },
   computed: {
-    ...mapGetters(['kodeProduk']),
-  },
-  methods: {
-    ...mapActions(['findProduct', 'activateLoading']),
-    querySearch(queryString, cb) {
-      let produk = this.produk;
-      let results = queryString ? produk.filter(this.createFilter(queryString)) : produk;
-      // call callback function to return suggestions
-      cb(results);
-    },
-    createFilter(queryString) {
-      return (dataProduk) => {
-        return (dataProduk.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-      };
-    },
-    async handleSelect(item) {
-      await this.activateLoading()
-      await this.findProduct(item.idProduct)
-    },
-    loadAll() {
-      return this.kodeProduk;
+    ...mapGetters(['produkList']),
+    searchDataProduct() {
+      return this.searchProduct(this.keyword);
     }
   },
-  mounted() {
-    this.produk = this.loadAll()
-  }
+  methods: {
+    ...mapActions(['findProduct', 'activateLoading', 'searchProduct']),
+  },
 };
 </script>
 

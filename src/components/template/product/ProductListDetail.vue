@@ -77,6 +77,7 @@ export default {
   props: {
     isAdmin: Boolean,
     editProduct: Function,
+    handleLoadingData: Function,
   },
   data() {
     return {
@@ -120,7 +121,8 @@ export default {
     this.getProducts()
     .then((response) => {
       if(response.code === 200 || response.code === 404){
-        this.loadingData = false;
+        this.loadingData = false
+        this.handleLoadingData(false)
       }
     })
   }

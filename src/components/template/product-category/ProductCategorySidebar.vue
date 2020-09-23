@@ -2,14 +2,24 @@
   <div class="product-category">
     <Search title="Cari Barang"/>
     <div class="product-category-data">
-      <div v-for="item in kategoriProduk" :key="item.id">
-        <el-button class="product-category__items">
+        <el-button class="product-category__items" @click="allProducts()">
+          Semua Produk
+        </el-button>
+      <div v-for="item in kategoriProduk" :key="item.id" class="product-category__wrapper">
+        <el-button class="product-category__items" @click="filterProduct(item.id_product_category)">
           {{item.name}}
         </el-button>
+        <div v-if="!checkProductCategory(item.id_product_category)">
+          <i class="el-icon-error product-category__items__delete" @click="deleteCategoryProduct(item.id_product_category)"></i>
+        </div>
       </div>
     </div>
     <div v-if="isAdmin">
-      <el-button id="isAdmin" type="success" @click="addCategoryProduct">Tambah Kategori</el-button>
+      <el-input
+        placeholder="Masukan kategori baru"
+        v-model="kategoriBaru">
+      </el-input>
+      <el-button id="isAdmin" type="success" style="margin-top:10px" @click="addCategoryProduct">Tambah Kategori</el-button>
     </div>
   </div>
 </template>
@@ -22,18 +32,83 @@ export default {
   name: 'ProductCategorySidebar',
   props: {
     isAdmin: Boolean,
-    addCategory: Function,
+    handleLoadingData: Function,
   },
   components: {
     Search,
   },
+  data(){
+    return {
+      kategoriBaru: '',
+    }
+  },
   computed: {
-    ...mapGetters(['kategoriProduk'])
+    ...mapGetters(['produkList', 'kategoriProduk']),
   },
   methods: {
-    ...mapActions(['productCategories']),
+    ...mapActions(['productCategories', 'getProducts', 'getProductByCategory', 'saveCategoryProcess', 'deleteCategoryProcess']),
+    checkProductCategory(id_product_category) {
+      let check = this.produkList.filter((productItem) => productItem.id_product_category === id_product_category);
+      if(check.length > 0){
+        return true;
+      }else{
+        return false;
+      }
+    },
     addCategoryProduct() {
-      this.addCategory();
+      this.saveCategoryProcess({name:this.kategoriBaru})
+      .then((response) => {
+        if(response.code !== 201){          
+          this.$notify.error({
+            title: 'Error',
+            message: response.message,
+            offset: 100
+          });
+        }else{          
+          this.$notify.success({
+            title: 'Success',
+            message: response.message,
+            offset: 100
+          });
+        }
+      })
+      this.kategoriBaru = '';
+    },
+    deleteCategoryProduct(id_product_category) {
+      this.deleteCategoryProcess(id_product_category)
+      .then((response) => {
+        if(response.code !== 204){          
+          this.$notify.error({
+            title: 'Error',
+            message: response.message,
+            offset: 100
+          });
+        }else{          
+          this.$notify.success({
+            title: 'Success',
+            message: response.message,
+            offset: 100
+          });
+        }
+      })
+    },
+    allProducts() {
+      this.handleLoadingData(true)
+      this.getProducts()
+      .then((response) => {
+        if(response.code === 200 || response.code === 404) {
+          this.handleLoadingData(false);
+        }
+      })
+    },
+    filterProduct(id_product_category) {
+      this.handleLoadingData(true)
+      this.getProductByCategory(id_product_category)
+      .then((response) => {
+        if(response.code === 200 || response.code === 404) {
+          this.handleLoadingData(false);
+        }
+      })
     }
   },
   mounted() {
@@ -57,6 +132,14 @@ export default {
   overflow: scroll;
 }
 
+.product-category__wrapper {
+  display:flex;
+  flex-direaction:row;
+  justify-content:space-between;
+  align-items:center;
+}
+
+
 .product-category__items {
   width: 100%;
   text-align: center;
@@ -68,22 +151,30 @@ export default {
   color: var(--kasir-main-color);
 }
 
+.product-category__items__delete {
+  margin-top:-10px;
+  margin-left:5px;
+  color:red;
+  font-size:20px;
+  cursor: pointer;
+}
+
 .product-category__items:hover,
 .active {
   background-color: var(--kasir-main-color);
   color: #fff;
-  border: none;
 }
+
 
 @media only screen and (max-height: 630px) {
   .product-category-data {
-    height: 230px;
+    height: 200px;
   }
 }
 
 @media only screen and (min-height: 630px) {
   .product-category-data {
-    height: 330px;
+    height: 300px;
   }
 }
 

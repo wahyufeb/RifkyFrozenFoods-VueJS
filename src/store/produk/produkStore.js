@@ -16,25 +16,9 @@ const getters = {
       return state.produk.find((productItem) => productItem.id_product === dataId)
     }
   },
-  kodeProduk: state => {
-    let filteredProduk = []
-    state.produk.filter((data) => {
-      filteredProduk.push({ idProduct: data.idProduct, value: data.name });
-    });
-    return filteredProduk;
-  }
 };
 
 const actions = {
-  findCategory({ commit }, category) {
-    commit('setCategory', category)
-  },
-  findProduct({ commit }, keyword) {
-    commit('setProduct', keyword);
-  },
-  activateLoading({ commit }) {
-    commit('setActivateLoading');
-  },
   async getProducts({ commit }) {
     let token = setDecryptCookie('TOKEN', null);
     const reqProducts = await axios.get(`${process.env.VUE_APP_BASE_API}/products`, {
@@ -103,7 +87,6 @@ const actions = {
     }
     return resSaveProduct;
   },
-  // eslint-disable-next-line no-unused-vars
   async savePriceCategory({ commit }, data) {
     const { id_product, name, price } = data.dataPrice;
     let id = data.dataId
@@ -144,7 +127,30 @@ const actions = {
       deleteProduct: resDeleteProduct,
       deletePriceCategory: resDeletePriceCategory
     };
-  }
+  },
+  async getProductByCategory({ commit }, id_product_category) {
+    let token = setDecryptCookie('TOKEN', null);
+    const reqProductsByCategory = await axios.get(`${process.env.VUE_APP_BASE_API}/products/${id_product_category}/category`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const resProductsByCategory = await reqProductsByCategory.data;
+    commit('setProductLoaded', resProductsByCategory.data);
+    return resProductsByCategory;
+  },
+  async searchProduct({ commit }, keyword) {
+    let token = setDecryptCookie('TOKEN', null);
+    const reqSearchProduct = await axios.get(`${process.env.VUE_APP_BASE_API}/products/search?q=${keyword}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const resSearchProduct = await reqSearchProduct.data;
+    commit('setProductLoaded', resSearchProduct.data);
+    return resSearchProduct;
+
+  },
 };
 
 const mutations = {
@@ -162,7 +168,6 @@ const mutations = {
     state.produk = data;
   },
   setProductCreated(state, data) {
-    console.log(data)
     state.produk.push(data)
   },
   setProductUpdated(state, data) {
@@ -176,27 +181,12 @@ const mutations = {
       name: data.category.name
     };
   },
-  setCategory(state, category) {
-    state.produk.filter((data) => data.category === category);
-  },
   setProductDeleted(state, id_product) {
     state.produk = state.produk.filter((item) => item.id_product !== id_product)
   },
-  // eslint-disable-next-line no-unused-vars
-  setProduct(getters, keyword) {
-    // console.log(state)
-    // console.log(keyword)
-    // console.log(this.$store)
-
-    // CALL API PENCARIAN
-
-    // getters.produkList = state.produk.filter((data) => data.idProduct == keyword);
-    // return state.loadingProduk = !state.loadingProduk;
-    // state.produk = state.produk.find((data) => data.idProduct === keyword);
+  setCategory(state, category) {
+    state.produk.filter((data) => data.category === category);
   },
-  setActivateLoading(state) {
-    return state.loadingProduk = !state.loadingProduk;
-  }
 };
 
 export default {
