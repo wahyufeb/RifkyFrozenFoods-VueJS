@@ -1,6 +1,9 @@
 <template>
   <div class="wrapper">
-    <el-row>
+    <div v-if="fullscreenLoading">
+      <div v-loading.fullscreen.lock="fullscreenLoading"></div>
+    </div>
+    <el-row v-else>
       <el-col :sm="2" :md="2" :lg="2" :xl="2">
         <!-- sidebar -->
         <Sidebar :menu="kasirMenu" :photo="userData.photo" :username="userData.username"/>
@@ -19,6 +22,11 @@ import Sidebar from '@/components/template/sidebar/SideBar.vue';
 
 export default {
   name: 'LayoutKasir',
+  data() {
+    return {
+      fullscreenLoading: true,
+    }
+  },
   components: {
     Sidebar,
   },

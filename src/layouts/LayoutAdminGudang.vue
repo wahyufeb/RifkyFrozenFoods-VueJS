@@ -1,9 +1,12 @@
 <template>
   <div class="wrapper">
-    <el-row>
+    <div v-if="fullscreenLoading">
+      <div v-loading.fullscreen.lock="fullscreenLoading"></div>
+    </div>
+    <el-row v-else>
       <el-col :sm="2" :md="2" :lg="2" :xl="2">
         <!-- sidebar -->
-        <Sidebar :menu="adminGudangMenu"/>
+        <Sidebar :menu="adminGudangMenu" :photo="userData.photo" :username="userData.username"/>
       </el-col>
       <el-col :xs="24" :sm="20" :md="21" :lg="21" :xl="21">
         <slot/> 
@@ -19,6 +22,11 @@ import Sidebar from '@/components/template/sidebar/SideBar.vue';
 
 export default {
   name: 'LayoutAdminGudang',
+  data() {
+    return {
+      fullscreenLoading: true,
+    }
+  },
   components: {
     Sidebar,
   },
