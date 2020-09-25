@@ -1,7 +1,7 @@
 <template>
   <div class="cart-item">
     <div class="cart-item__data">
-      <img :src="image" :alt="name">
+      <img :src="imageData(image)" :alt="name">
       <div class="cart-item__detail">
         <div class="cart-item__nama">
           {{ name }}
@@ -45,6 +45,10 @@ export default {
     ...mapActions(['addQty', 'minQty']),
     toRp(val){
       return convertRp(val);
+    },
+    imageData(image) {
+      // eslint-disable-next-line no-undef
+      return `${process.env.VUE_APP_API_RESOURCE}/uploads/products/${image}`
     },
   },
 };

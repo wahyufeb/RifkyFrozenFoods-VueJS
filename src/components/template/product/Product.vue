@@ -1,6 +1,6 @@
 <template>
   <div class="product" >
-    <img :src="image" alt="name" @click="addToCart">
+    <img :src="imageData(image)" alt="name" @click="addToCart">
     <div class="product__detail">
       {{ name }}
       <h4>Rp{{ toRp }}</h4>
@@ -16,7 +16,7 @@ import convertRp from '@/helper/convertRupiah.js';
 export default {
   name: 'Product',
   props: {
-    idProduct: Number,
+    id_product: Number,
     image: String,
     name: String,
     price: Number,
@@ -31,7 +31,7 @@ export default {
     addToCart(){
       const data = {
         idCart: uuidv4(),
-        idProduct: this.idProduct,
+        id_product: this.id_product,
         image: this.image,
         name: this.name,
         price: this.price,
@@ -39,6 +39,10 @@ export default {
         subtotal: 0,
       };
       this.addProduct(data);
+    },
+    imageData(image) {
+      // eslint-disable-next-line no-undef
+      return `${process.env.VUE_APP_API_RESOURCE}/uploads/products/${image}`
     },
   },
 };

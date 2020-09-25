@@ -111,7 +111,7 @@ export default {
       })
     }
   },
-  mounted() {
+  created() {
     this.productCategories();
   },
 };
@@ -133,12 +133,11 @@ export default {
 }
 
 .product-category__wrapper {
-  display:flex;
-  flex-direaction:row;
-  justify-content:space-between;
-  align-items:center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
-
 
 .product-category__items {
   width: 100%;
@@ -152,10 +151,10 @@ export default {
 }
 
 .product-category__items__delete {
-  margin-top:-10px;
-  margin-left:5px;
-  color:red;
-  font-size:20px;
+  margin-top: -10px;
+  margin-left: 5px;
+  color: red;
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -164,7 +163,6 @@ export default {
   background-color: var(--kasir-main-color);
   color: #fff;
 }
-
 
 @media only screen and (max-height: 630px) {
   .product-category-data {

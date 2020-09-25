@@ -1,18 +1,21 @@
 <template>
   <div class="store-list">
     <el-row >
-      <el-col :lg="6" class="store-item-wrapper">
+      <el-col v-for="kios in kiosData" :key="kios.id_store" :lg="8" class="store-item-wrapper">
         <div class="store-item">
           <div class="store-item__image">
             <i class="el-icon-s-shop"></i>
           </div>
           <div class="store-item__description">
-            <h4>Kios Mandiraja</h4>
+            <h4>{{ kios.name }}</h4>
             <p>
               <i class="el-icon-location"></i>
-              Mandiraja
+              {{ kios.location }}
             </p>
-        </div>
+          </div>
+          <div v-if="isLevel === 'warehouse' " class="delete" @click="deleteStore(kios.id_store)">
+            x
+          </div>
         </div>
       </el-col>
     </el-row>
@@ -20,8 +23,39 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'StoreList',
+  props: {
+    isLevel: String,
+  },
+  computed: {
+    ...mapGetters(['kiosData']),
+  },
+  methods: {
+    ...mapActions(['getStores', 'deleteStoreProcess']),
+    deleteStore(id_store) {
+      this.deleteStoreProcess(id_store)
+      .then((response) => {
+        if(response.code !== 204){          
+          this.$notify.error({
+            title: 'Error',
+            message: response.message,
+            offset: 100
+          });
+        }else{          
+          this.$notify.success({
+            title: 'Success',
+            message: response.message,
+            offset: 100
+          });
+        }
+      });
+    }
+  },
+  created() {
+    this.getStores();
+  }
 }
 </script>
 
@@ -34,6 +68,7 @@ export default {
 
 .store-item-wrapper {
   padding: 5px;
+  position: relative;
 }
 
 .store-item {
@@ -51,6 +86,19 @@ export default {
   align-items: flex-start;
   display: flex;
   justify-content: flex-start;
+}
+
+.delete {
+  cursor: pointer;
+  position: absolute;
+  background-color: red;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
 }
 
 /* .store-item__description {

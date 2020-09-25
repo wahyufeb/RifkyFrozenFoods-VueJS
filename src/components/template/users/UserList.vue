@@ -1,22 +1,52 @@
 <template>
-<div>
-  <div class="users">
+<div class="wrapper-users">
+  <div class="users" v-for="admin in penggunaDataAdmin" :key="admin.id_admin * 1">
     <div class="users__list">
       <div class="users__data">
         <div class="users__data__photo">
-          <img src="https://lh3.googleusercontent.com/proxy/wAYCT18cGHBWB6g6arOktmeFQB4CtTKhifTaqC7_zxWpkgMapjl-x5xmBXw2N1yuZX_v4NqvjRsySsmBf6cC6SMA57MXnl4YSnnNW7MYdIyhoWVJgN8B" alt="photo">
+          <img :src="imageData(admin.photo)" :alt="admin.name">
         </div>
-        <div class="users__data__name">P'Orn BNK48</div>
-      </div>
-      <div class="users__store">
-        Kios Mandiraja, Mandiraja Kulon
+        <div class="users__data__name">{{ admin.name }}</div>
       </div>
     </div>
+    <div class="users__data__admin">Admin</div>
+  </div><br>
+
+  <div class="users" v-for="warehouse in penggunaDataWarehouse" :key="warehouse.id_warehouse_admin * 2">
+    <div class="users__list">
+      <div class="users__data">
+        <div class="users__data__photo">
+          <img :src="imageData(warehouse.photo)" :alt="warehouse.name">
+        </div>
+        <div class="users__data__name">{{ warehouse.name }}</div>
+      </div>
+      <div class="users__store">
+        {{warehouse.store.name }}, {{warehouse.store.location}}
+      </div>
+      <div class="users__data__warehouse">Admin Gudang</div>
+    </div>
     <div class="users__actions">
-      <el-button type="primary" @click="editUserData(1)">
-        <i class="el-icon-edit-outline"></i>
+      <el-button type="danger" @click="deleteDataWarehouse(warehouse.id_warehouse_admin)">
+        <i class="el-icon-delete"></i>
       </el-button>
-      <el-button type="danger" @click="deleteUserData(1)">
+    </div>
+  </div><br>
+
+  <div class="users" v-for="cashier in penggunaDataCashier" :key="cashier.id_cashier * 3">
+    <div class="users__list">
+      <div class="users__data">
+        <div class="users__data__photo">
+          <img :src="imageData(cashier.photo)" :alt="cashier.name">
+        </div>
+        <div class="users__data__name">{{ cashier.name }}</div>
+      </div>
+      <div class="users__store">
+        {{cashier.store.name }}, {{cashier.store.location}}
+      </div>
+      <div class="users__data__cashier">Cashier</div>
+    </div>
+    <div class="users__actions">
+      <el-button type="danger" @click="deleteDataCashier(cashier.id_cashier)">
         <i class="el-icon-delete"></i>
       </el-button>
     </div>
@@ -25,24 +55,64 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'UserList',
   props: {
-    editUser: Function,
     deleteUser: Function,
   },
+  computed: {
+    ...mapGetters(['penggunaDataAdmin', 'penggunaDataWarehouse', 'penggunaDataCashier'])
+  },
   methods: {
-    editUserData(params) {
-      this.editUser(params);
+    ...mapActions(['deleteUserCashier', 'deleteUserWarehouse']),
+    imageData(photo) {
+      // eslint-disable-next-line no-undef
+      return `${process.env.VUE_APP_API_RESOURCE}/uploads/photo/${photo}`
     },
-    deleteUserData(params) {
-      this.deleteUser(params);
+    deleteDataWarehouse(params) {
+      this.deleteUserWarehouse(params)
+      .then((response) => {
+        if(response.code === 204){
+          this.$notify({
+            title: 'Success',
+            message: "Berhasil Menghapus Admin Gudang",
+            type: 'success'
+          });
+        }else{
+          this.$notify.error({
+            title: 'Error',
+            message: "Gagal Menghapus Admin Gudang"
+          });
+        }
+      })
+    },
+    deleteDataCashier(params) {
+      this.deleteUserCashier(params)
+      .then((response) => {
+        if(response.code === 204){
+          this.$notify({
+            title: 'Success',
+            message: "Berhasil Menghapus Kasir",
+            type: 'success'
+          });
+        }else{
+          this.$notify.error({
+            title: 'Error',
+            message: "Gagal Menghapus Kasir"
+          });
+        }
+      })
     },
   }
 };
 </script>
 
 <style scoped>
+.wrapper-users {
+  margin-top: 40px;
+}
+
 .users {
   display: flex;
   flex-direction: row;
@@ -56,7 +126,7 @@ export default {
 }
 
 .users__list {
-  width: 500px;
+  width: 700px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -69,6 +139,26 @@ export default {
   align-items: center;
 }
 
+.users__data__admin,
+.users__data__warehouse,
+.users__data__cashier {
+  padding: 5px;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.users__data__admin {
+  background-color: blueviolet;
+}
+
+.users__data__warehouse {
+  background-color: teal;
+}
+
+.users__data__cashier {
+  background-color: tomato;
+}
+
 .users__data .users__data__photo img {
   width: 40px;
   height: 40px;
@@ -78,6 +168,7 @@ export default {
 }
 
 .users__data .users__data__name {
+  width: 200px;
   font-weight: 600;
 }
 </style>

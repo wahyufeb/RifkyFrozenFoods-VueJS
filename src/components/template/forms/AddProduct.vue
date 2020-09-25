@@ -198,6 +198,15 @@ export default {
           });
         }
       })
+      .catch((err) => {
+        if(err.response.status === 422) {        
+          this.$notify.error({
+            title: 'Error',
+            message: err.response.data.image[0],
+            offset: 100
+          });
+        }
+      })
       this.formData.name = '';
       this.formData.image = ''
       this.formData.total_perunit =  '';
@@ -240,13 +249,13 @@ export default {
 }
 
 .image-uploaded {
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .image-uploaded img {
-  width:300px;
+  width: 300px;
   height: 300px;
   object-fit: cover;
 }

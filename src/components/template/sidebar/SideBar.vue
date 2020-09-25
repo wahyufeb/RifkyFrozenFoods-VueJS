@@ -1,8 +1,10 @@
 <template>
   <div class="kasir__sidebar hidden-xs-only">
     <!-- Avatar -->
-    <el-avatar :src="photo"></el-avatar>
-    <p id="username">{{username}}</p>
+    <el-tooltip class="item" effect="light" :content="username" placement="right">
+      <el-avatar :src="photoData(photo)"></el-avatar>
+      <!-- <el-button>right</el-button> -->
+    </el-tooltip>
     <!-- Links -->
     <div v-for="item in menu" :key="item.link">
       <router-link class="kasir__sidebar__link" :to="item.link">
@@ -19,6 +21,12 @@ export default {
     username: String,
     photo: String,
   },
+  methods: {
+    photoData(photo) {
+      // eslint-disable-next-line no-undef
+      return `${process.env.VUE_APP_API_RESOURCE}/uploads/photo/${photo}`
+    },
+  }
 };
 </script>
 
@@ -29,7 +37,7 @@ export default {
   margin-top: 5px;
 }
 .kasir__sidebar {
-  width: 60px;
+  width: 80px;
   height: 100vh;
   display: flex;
   flex-direction: column;
