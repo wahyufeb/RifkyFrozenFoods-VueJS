@@ -6,7 +6,7 @@
     <div class="main-content__content">
       <el-row>
         <el-col :lg="4">
-          <Jumbotron title="Total Produk" data="500" :formatRupiah="false"/>
+          <Jumbotron title="Total Produk" :data="totalProducts" :formatRupiah="false" :isAdmin="false"/>
         </el-col>
       </el-row>
       <div class="detail-store">
@@ -17,7 +17,7 @@
           <ProductCategorySidebar/>
         </el-col>
         <el-col :lg="18" :offset="1">
-          <ProductListDetail/>
+          <ProductListDetailStock isLevel="cashier" :handleLoadingData="handleLoadingData"/>
         </el-col>
       </el-row>  
     </div>
@@ -25,17 +25,31 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Jumbotron from '@/components/template/jumbotron/Jumbotron.vue';
 import ProductCategorySidebar from '@/components/template/product-category/ProductCategorySidebar.vue';
-import ProductListDetail from '@/components/template/product/ProductListDetail.vue';
+import ProductListDetailStock from '@/components/template/product/ProductListDetailStock.vue';
 
 export default {
   name: 'StokBarang',
   components: {
     Jumbotron,
     ProductCategorySidebar,
-    ProductListDetail
+    ProductListDetailStock
   },
+  data() {
+    return {
+      loadingData: true,
+    }
+  },
+  computed: {
+    ...mapGetters(['totalProducts']),
+  },
+  methods: {       
+    handleLoadingData(params) {
+      return this.loadingData = params;
+    },
+  }
 }
 </script>
 

@@ -119,7 +119,7 @@ export default {
             let role = setDecryptCookie('ROLE');
             if(role == 'cashier'){
               this.$router.push('/kasir-app');
-            }else if(role == 'warehouse'){
+            }else if(role == 'warehouse_admin'){
               this.$router.push('/kasir-gudang');
             }else if(role == 'admin'){
               this.$router.push('/dashboard-admin');

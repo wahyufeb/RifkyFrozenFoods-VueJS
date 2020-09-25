@@ -6,7 +6,7 @@
     <div class="main-content__content">
       <el-row>
         <el-col :lg="4">
-          <Jumbotron title="Total Produk" :data="500" :formatRupiah="false" :isAdmin="true"/>
+          <Jumbotron title="Total Produk" :data="totalProducts" :formatRupiah="false" :isAdmin="true"/>
         </el-col>
         <el-col :lg="4" :offset="1">          
           <el-button type="primary" @click="handleDialogVisible">
@@ -17,12 +17,12 @@
       <div class="detail-store">
         Daftar Produk  
       </div>
-      <el-row v-loading="loadingData">
+      <el-row >
         <el-col :lg="5">
           <ProductCategorySidebar :isAdmin="true" :handleLoadingData="handleLoadingData"/>
         </el-col>
-        <el-col :lg="18" :offset="1">
-          <ProductListDetail :isAdmin="true" :editProduct="editProduct" :handleLoadingData="handleLoadingData"/>
+        <el-col :lg="18" :offset="1" v-loading="loadingData">
+          <ProductListDetail :editProduct="editProduct" :handleLoadingData="handleLoadingData"/>
         </el-col>
       </el-row>  
     </div>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Jumbotron from '@/components/template/jumbotron/Jumbotron.vue';
 import AddProduct from '@/components/template/forms/AddProduct.vue';
 import ProductCategorySidebar from '@/components/template/product-category/ProductCategorySidebar.vue';
@@ -56,8 +57,11 @@ export default {
       centerDialogVisible: false,
       productId: '',
       titleDialog:'',
-      loadingData: true
+      loadingData: true,
     }
+  },
+  computed: {
+    ...mapGetters(['totalProducts']),
   },
   methods: {
     editProduct(params) {

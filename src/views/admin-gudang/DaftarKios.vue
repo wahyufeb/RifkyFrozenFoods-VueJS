@@ -4,39 +4,51 @@
         Stok Barang Gudang
       </div>
     <div class="main-content__content">
-      <!-- <el-row>
-        <el-col :lg="4">          
-          <el-button type="primary" @click="open">
-            Barang Masuk
+      <el-row>
+        <el-col :lg="4">           
+          <el-button type="primary" @click="handleDialogVisible">
+            Buka Kios
           </el-button>
         </el-col>
-        <el-col :lg="4" :offset="1">
-          <el-button type="danger">
-            Barang Keluar
-          </el-button>
-        </el-col>
-      </el-row> -->
+      </el-row>
       <div class="detail-store">
         Daftar Kios  
       </div>
       <el-row>
         <el-col>
-          <StoreList/>
+          <StoreList isLevel="warehouse"/>
         </el-col>
       </el-row>  
     </div>
+    <el-dialog
+      title="Buka Kios"
+      :visible.sync="centerDialogVisible"
+      width="35%"
+      center>
+      <AddStore :handleDialogVisible="handleDialogVisible"/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import AddStore from '@/components/template/forms/AddStore.vue';
 import StoreList from '@/components/template/stores/StoreList.vue';
 
 export default {
   name: 'DaftarKios',
   components: {
     StoreList,
+    AddStore,
+  },
+  data() {
+    return {
+      centerDialogVisible: false,
+    }
   },
   methods: {
+    handleDialogVisible() {
+      return this.centerDialogVisible  = !this.centerDialogVisible;
+    }, 
     open() {
       this.$confirm(<Jumbotron title="Total Produk" data="500" />, 'Input Data Barang Masuk', {
         confirmButtonText: 'Tambahkan Barang Masuk',
@@ -51,7 +63,7 @@ export default {
         });          
       });
     }
-  }
+  },
 }
 </script>
 

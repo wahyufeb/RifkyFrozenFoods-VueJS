@@ -15,12 +15,12 @@
         <div class="main-content__jumbotron">
           <h4>Barang</h4>
           <div class="main-content__jumbotron__data">
-            <Jumbotron title="Total Seluruh Barang" :data="500" :formatRupiah="false" :isAdmin="true"/>
+            <Jumbotron title="Total Seluruh Barang" :data="totalProducts" :formatRupiah="false" :isAdmin="true"/>
           </div>
         </div>
       </div>
-      <h4 id="kios">Kios</h4>
-      <StoreList/>
+      <h4 id="kios">Kios/Gudang</h4>
+      <StoreList isLevel="admin"/>
     </div>
   </div>
 </template>
@@ -38,14 +38,15 @@ export default {
     StoreList,
   },
   computed: {
-    ...mapGetters(['totalIncome', 'totalIncomeToday'])
+    ...mapGetters(['totalIncome', 'totalIncomeToday', 'totalProducts'])
   },
   methods: {
-    ...mapActions(['getTotalIncome', 'getTotalIncomeToday'])
+    ...mapActions(['getTotalIncome', 'getTotalIncomeToday', 'getTotalProducts'])
   },
   created() {
     this.getTotalIncome();
     this.getTotalIncomeToday();
+    this.getTotalProducts();
   }
 }
 </script>

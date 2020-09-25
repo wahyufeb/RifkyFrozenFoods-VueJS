@@ -6,20 +6,28 @@
     <div class="main-content__content">
       <el-row>
         <el-col :lg="5">          
-          <el-button type="primary" @click="open">
+          <el-button type="primary" @click="handleDialogVisible">
             Tambahkan Pengguna
           </el-button>
         </el-col>
       </el-row>
-      <h4 id="users-title">Daftar Pengguna</h4>
       <div class="users-management">
-        <UserList :editUser="editUser" :deleteUser="deleteUser"/>
+        <UserList :deleteUser="deleteUser"/>
       </div>
     </div>
+    <el-dialog
+      :title="titleDialog"
+      :visible.sync="centerDialogVisible"
+      width="35%"
+      center>
+      <AddUser :handleDialogVisible="handleDialogVisible" :handleLoadingData="handleLoadingData"/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+import AddUser from '@/components/template/forms/AddUser.vue';
 import UserList from '@/components/template/users/UserList.vue';
 
 export default {
@@ -27,29 +35,32 @@ export default {
   title:'User Management - Admin Page',
   components: {
     UserList,
+    AddUser,
+  },
+  data() {
+    return {
+      centerDialogVisible: false,
+      titleDialog: '',
+    }
   },
   methods: {
-    open() {
-      this.$confirm(<Jumbotron title="Total Produk" data="500" />, 'Input Data Barang Masuk', {
-        confirmButtonText: 'Tambahkan Barang Masuk',
-        cancelButtonText: 'Batal',
-        type: 'warning'
-      }).then(() => {
-        alert("EYAY")
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: 'Barang Masuk dibatalkan'
-        });          
-      });
-    },
-    editUser(params) {
-      alert('Edit User'+ params)
+    ...mapActions(['getStores', 'getUsers']),
+    handleDialogVisible() {
+      this.titleDialog = 'Tambahkan Pengguna'
+      return this.centerDialogVisible  = !this.centerDialogVisible;
     },
     deleteUser(params) {
       alert('Delete User'+ params)
-    }
-  }
+    },           
+    handleLoadingData(params) {
+      return this.loadingData = params;
+    },
+  },
+  created() {
+    this.getStores()
+    this.getUsers();
+  },
+
 }
 </script>
 

@@ -5,10 +5,10 @@
         <div class="main-content__title">
           Aplikasi Kasir Gudang
         </div>
-        <div class="main-content__content">
+        <div class="main-content__content" v-loading="loadingData">
           <Search title="Cari Barang" />
-          <ProductCategory />
-          <ProductList/>
+          <ProductCategory :handleLoadingData="handleLoadingData" />
+          <ProductList :handleLoadingData="handleLoadingData"/>
         </div>
       </el-col>
       <el-col :lg="7" :offset="1">
@@ -38,6 +38,16 @@ export default {
     ProductList,
     Cart,
   },
+  data() {
+    return {
+      loadingData: true,
+    }
+  },
+  methods: {
+    handleLoadingData(params) {
+      this.loadingData = params;
+    }
+  }
 };
 </script>
 
