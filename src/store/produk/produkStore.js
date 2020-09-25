@@ -4,12 +4,34 @@ import { setDecryptCookie } from '@/helper/setCookie.js';
 
 const state = {
   produk: [],
-  loadingProduk: false,
+  // produkCart: [],
+  produkTerfilter: [],
+  totalProducts: 0,
 };
 
 const getters = {
   produkList: state => {
     return state.produk
+  },
+  produkKeranjang: state => {
+    return ({ type, data }) => {
+      if (type === null && data === null) {
+        if (state.produkTerfilter.length !== 0) {
+          return state.produkTerfilter;
+        } else {
+          return state.produk;
+        }
+      } else if (type === 'filter') {
+        return state.produkTerfilter = state.produk.filter((produkItem) => produkItem.category.id_product_category == data);
+      } else if (type === 'search') {
+        console.log(state.produk.filter((productItem) => {
+          return data.toLowerCase().split(' ').every(key => productItem.name.toLowerCase().includes(key))
+        }))
+      }
+    }
+  },
+  totalProducts: state => {
+    return state.totalProducts;
   },
   selectedProduct(state) {
     return (dataId) => {
@@ -19,7 +41,18 @@ const getters = {
 };
 
 const actions = {
-  async getProducts({ commit }) {
+  async getTotalProducts({ commit }) {
+    let token = setDecryptCookie('TOKEN', null);
+    const reqTotalProducts = await axios.get(`${process.env.VUE_APP_BASE_API}/products/total-product`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const resTotalProducts = await reqTotalProducts.data;
+    commit('setTotalProducts', resTotalProducts.data);
+    return resTotalProducts;
+  },
+  async getProducts({ commit, dispatch }) {
     let token = setDecryptCookie('TOKEN', null);
     const reqProducts = await axios.get(`${process.env.VUE_APP_BASE_API}/products`, {
       headers: {
@@ -27,10 +60,20 @@ const actions = {
       }
     });
     const resProducts = await reqProducts.data;
-    if (resProducts.code === 200) {
-      commit('setProductLoaded', resProducts.data);
-    }
+    commit('setProductLoaded', resProducts.data);
+    dispatch('getTotalProducts');
     return resProducts;
+  },
+  async getProductStorageByStoreId({ commit }, id_store) {
+    let token = setDecryptCookie('TOKEN', null);
+    const reqProductsStorage = await axios.get(`${process.env.VUE_APP_BASE_API}/product-storage/${id_store}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const resProductsStorage = await reqProductsStorage.data;
+    commit('setProductStorageLoaded', resProductsStorage.data);
+    return resProductsStorage;
   },
   async saveProductProcess({ commit, dispatch }, data) {
     const { name, image, total_perunit, id_product_category } = data.dataProduct;
@@ -85,6 +128,7 @@ const actions = {
     } else {
       commit('setProductCreated', resSaveProduct.data)
     }
+    dispatch('getTotalProducts');
     return resSaveProduct;
   },
   async savePriceCategory({ commit }, data) {
@@ -111,7 +155,7 @@ const actions = {
       commit('setPriceProductCreated', resSavePriceCategory.data);
     }
   },
-  async deleteProductProcess({ commit }, id_product) {
+  async deleteProductProcess({ commit, dispatch }, id_product) {
     let token = setDecryptCookie('TOKEN', null);
     let headerConfig = {
       headers: {
@@ -123,6 +167,7 @@ const actions = {
     const resDeleteProduct = await reqDeleteProduct.data;
     const resDeletePriceCategory = await reqDeletePriceCategory.data
     commit('setProductDeleted', id_product);
+    dispatch('getTotalProducts');
     return {
       deleteProduct: resDeleteProduct,
       deletePriceCategory: resDeletePriceCategory
@@ -154,6 +199,13 @@ const actions = {
 };
 
 const mutations = {
+  setProductStorageLoaded(state, data) {
+    let result = []
+    data.filter((productItem) => {
+      result.push(productItem.product)
+    });
+    state.produk = result;
+  },
   setPriceProductCreated(state, data) {
     let getProductId = state.produk.find((item) => item.id_product === data.id_product);
     getProductId.price.push(data)
@@ -166,9 +218,14 @@ const mutations = {
   },
   setProductLoaded(state, data) {
     state.produk = data;
+    // state.totalProducts = state.produk.length;
+  },
+  setTotalProducts(state, data) {
+    state.totalProducts = data;
   },
   setProductCreated(state, data) {
     state.produk.push(data)
+    // state.totalProducts = state.produk.length;
   },
   setProductUpdated(state, data) {
     let getProdukId = state.produk.find((item) => item.id_product === data.id_product);
@@ -183,6 +240,7 @@ const mutations = {
   },
   setProductDeleted(state, id_product) {
     state.produk = state.produk.filter((item) => item.id_product !== id_product)
+    // state.totalProducts = state.produk.length;
   },
   setCategory(state, category) {
     state.produk.filter((data) => data.category === category);

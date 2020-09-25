@@ -18,9 +18,9 @@ const actions = {
       username: data.username,
       password: data.password
     });
-    const resApiLoginZ = await reqApiLogin.data;
-    if (resApiLoginZ.code === 200) {
-      commit('setAuth', resApiLoginZ.data);
+    const resApiLogin = await reqApiLogin.data;
+    if (resApiLogin.code === 200) {
+      commit('setAuth', resApiLogin.data);
     }
     return reqApiLogin;
   },

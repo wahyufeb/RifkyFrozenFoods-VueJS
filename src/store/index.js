@@ -16,8 +16,17 @@ import keranjang from './keranjang/keranjangStore.js';
 // Accounts
 import login from './accounts/loginStore.js';
 
-// Income
-import income from './income/incomeStore.js';
+// Pendapatan
+import pendapatan from './pendapatan/pendapatanStore.js';
+
+// Kios 
+import kios from './kios/kiosStore.js';
+
+// Pengguna
+import pengguna from './pengguna/penggunaStore.js';
+
+// Fakur
+import fakur from './fakur/fakurStore.js';
 
 Vue.use(Vuex);
 
@@ -31,7 +40,10 @@ const createStore = () => {
       produk,
       keranjang,
       login,
-      income,
+      pendapatan,
+      kios,
+      pengguna,
+      fakur,
     },
   });
 };

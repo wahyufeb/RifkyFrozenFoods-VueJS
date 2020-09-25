@@ -49,11 +49,11 @@ const mutations = {
     });
   },
   addProduct(state, data) {
-    let a = state.keranjang.filter((item) => item.idProduct === data.idProduct);
+    let a = state.keranjang.filter((item) => item.id_product === data.id_product);
     if (a.length === 0) {
       return state.keranjang.push(data);
     } else {
-      state.keranjang.find(item => item.idProduct == a.idProduct);
+      state.keranjang.find(item => item.id_product == a.id_product);
     }
   }
 };
