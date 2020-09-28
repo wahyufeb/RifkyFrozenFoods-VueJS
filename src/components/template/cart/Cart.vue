@@ -29,7 +29,7 @@
             <div>Total</div>
             <div id="total-cart">Rp{{ toRp(totalCart) }}</div>
           </div>
-          <el-button id="paying" type="primary">Bayar Sekarang</el-button>
+          <el-button id="paying" type="primary" @click="checkoutCashier">Bayar Sekarang</el-button>
         </div>    
       </div>
     </div>
@@ -40,7 +40,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import { setDecryptCookie } from '@/helper/setCookie.js';
 import convertRp from '@/helper/convertRupiah.js';
 import CartItem from '@/components/template/cart/CartItem';
 
@@ -51,11 +52,11 @@ export default {
   },
   data(){
     return {
-      uangPembeli: ''
+      uangPembeli: '',
     };
   },
   computed: {
-    ...mapGetters(['keranjangBelanja', 'totalCart', 'kembalian']),
+    ...mapGetters(['userData', 'keranjangBelanja', 'totalCart']),
     uangKembalian() {
       let kembalian = this.uangPembeli - this.totalCart
       if (kembalian < 0) {
@@ -68,9 +69,47 @@ export default {
     },
   },
   methods : {
+    ...mapActions(['checkoutCashier', 'saveInvoiceProcess']),
     toRp(val){
       return convertRp(val);
     },
+    checkoutCashier() {
+      let role = setDecryptCookie('ROLE');
+      let kembalian = this.uangPembeli - this.totalCart;
+
+      const invoiceData = {
+        id_store: this.userData.id_store,
+        total: this.totalCart,
+        buyer_money: parseInt(this.uangPembeli),
+        change_money: kembalian
+      }
+
+      if(role === 'warehouse'){
+        invoiceData.id_cashier = 0
+      }else{
+        invoiceData.id_cashier = this.userData.id_cashier
+      }
+      
+      if(kembalian < 0){
+        this.$message.error(`Oops, Uang anda kurang Rp${this.toRp(kembalian*(-1))}`);
+      }else{
+        const allData = {
+          invoice: invoiceData,
+          keranjangBelanja: this.keranjangBelanja 
+        }
+        this.saveInvoiceProcess(allData)
+        .then((response) => {
+          if(response.code !== 201){
+            this.$message.error('😥 Transaksi Gagal, Silahkan Coba Lagi');
+          }else{
+            this.$message({
+              message: '✔ Transaksi Berhasil',
+              type: 'success'
+            });
+          }
+        });
+      }
+    }
   }
 };
 </script>

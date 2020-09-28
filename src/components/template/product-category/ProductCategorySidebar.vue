@@ -1,6 +1,6 @@
 <template>
   <div class="product-category">
-    <Search title="Cari Barang"/>
+    <Search title="Cari Barang" :isAdmin="isAdmin"/>
     <div class="product-category-data">
         <el-button class="product-category__items" @click="allProducts()">
           Semua Produk
@@ -9,8 +9,10 @@
         <el-button class="product-category__items" @click="filterProduct(item.id_product_category)">
           {{item.name}}
         </el-button>
-        <div v-if="!checkProductCategory(item.id_product_category)">
-          <i class="el-icon-error product-category__items__delete" @click="deleteCategoryProduct(item.id_product_category)"></i>
+        <div v-if="isAdmin">
+          <div v-if="!checkProductCategory(item.id_product_category)">
+            <i class="el-icon-error product-category__items__delete" @click="deleteCategoryProduct(item.id_product_category)"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -43,10 +45,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['produkList', 'kategoriProduk']),
+    ...mapGetters(['userData', 'produkList', 'produkKeranjang', 'kategoriProduk']),
   },
   methods: {
-    ...mapActions(['productCategories', 'getProducts', 'getProductByCategory', 'saveCategoryProcess', 'deleteCategoryProcess']),
+    ...mapActions(['productCategories', 'getProducts', 'getProductStorageByStoreId', 'getProductByCategory', 'saveCategoryProcess', 'deleteCategoryProcess']),
+    // =============== Admin Level ===================
     checkProductCategory(id_product_category) {
       let check = this.produkList.filter((productItem) => productItem.id_product_category === id_product_category);
       if(check.length > 0){
@@ -92,23 +95,52 @@ export default {
         }
       })
     },
+    // ============= End Admin Level ===================
     allProducts() {
       this.handleLoadingData(true)
-      this.getProducts()
-      .then((response) => {
-        if(response.code === 200 || response.code === 404) {
-          this.handleLoadingData(false);
-        }
-      })
+      if(this.isAdmin){
+        this.getProducts()
+        .then((response) => {
+          if(response.code === 200 || response.code === 404) {
+            this.handleLoadingData(false);
+          }
+        })
+      }else{
+        let id_store = this.userData.id_store;
+        this.$store.state.produk.produkTerfilter = [];
+        this.getProductStorageByStoreId(id_store)
+        .then((response) => {
+          console.error(response);
+          if(response.code === 200 || response.code === 404){
+            this.handleLoadingData(false);
+          }
+        })
+      }
     },
     filterProduct(id_product_category) {
       this.handleLoadingData(true)
-      this.getProductByCategory(id_product_category)
-      .then((response) => {
-        if(response.code === 200 || response.code === 404) {
+      if(this.isAdmin){
+        this.getProductByCategory(id_product_category)
+        .then((response) => {
+          if(response.code === 200 || response.code === 404) {
+            this.handleLoadingData(false);
+          }
+        })
+      }else{
+        let filteredResult = this.produkKeranjang({type:'filter', data:id_product_category});
+        if(filteredResult.length !== 0){
+          setTimeout(() => {
+            this.handleLoadingData(false);
+          }, 500);
+        }else{
+          this.$message({
+            showClose: true,
+            message: 'Produk tidak tersedia',
+            type: 'warning'
+          });
           this.handleLoadingData(false);
         }
-      })
+      }
     }
   },
   created() {

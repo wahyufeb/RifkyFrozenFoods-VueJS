@@ -16,6 +16,7 @@ export default {
   name: 'Search',
   props: {
     title: String,
+    isAdmin: Boolean,
   },
   data() {
     return {
@@ -23,12 +24,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['produkList']),
-    searchDataProduct() {
-      return this.searchProduct(this.keyword);
-    }
+    ...mapGetters(['produkList', 'produkKeranjang']),
   },
   methods: {
+    searchDataProduct() {
+      if(this.isAdmin){
+        return this.searchProduct(this.keyword);
+      }else{
+        return this.produkKeranjang({type:'search', data:this.keyword})
+      }
+    },
     ...mapActions(['findProduct', 'activateLoading', 'searchProduct']),
   },
 };

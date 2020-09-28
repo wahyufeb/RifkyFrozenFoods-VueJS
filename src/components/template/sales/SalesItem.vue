@@ -1,12 +1,13 @@
 <template>
-  <el-table
+  <div>
+    <el-table
     :data="tableData"
     style="width: 100%">
     <el-table-column
       label="Waktu">
       <template slot-scope="scope">
         <i class="el-icon-time"></i>
-        <span style="margin-left: 10px">{{ scope.row.waktu }}</span>
+        <span style="margin-left: 10px">{{ scope.row.date }}</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -18,76 +19,114 @@
     <el-table-column
       label="Uang Pembeli">
       <template slot-scope="scope">
-        <span style="margin-left: 10px">Rp{{ toRp(scope.row.buyerMoney) }}</span>
+        <span style="margin-left: 10px">Rp{{ toRp(scope.row.buyer_money) }}</span>
       </template>
     </el-table-column>
     <el-table-column
       label="Kembalian">
       <template slot-scope="scope">
-        <span style="margin-left: 10px">Rp{{ toRp(scope.row.change) }}</span>
+        <span style="margin-left: 10px">Rp{{ toRp(scope.row.change_money) }}</span>
       </template>
     </el-table-column>
     <el-table-column
       label="Detail">
       <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>Total : Rp{{ toRp(scope.row.total) }}</p>
-          <p>Kembalian : Rp{{ toRp(scope.row.change) }}</p>
           <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">Detail</el-tag>
+            <el-button type="primary" @click="detailInvoice(scope.row.id_invoice)">Detail</el-button>
           </div>
-        </el-popover>
       </template>
     </el-table-column>
-  </el-table>
+
+    </el-table>
+    <el-dialog
+      title="Detail Invoice"
+      :visible.sync="centerDialogVisible"
+      width="35%"
+      center>
+      <table v-if="centerDialogVisible" id="invoice-table" >
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Name</th>
+            <th>Qty</th>
+            <th>Subtotal </th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr class="transactions" v-for="(item, i) in dataTransaksi" :key="item.id_transaction">
+              <td>{{ i+1 }}.</td>
+              <td>
+                {{ item.product.name }}
+              </td>
+              <td>{{ item.qty }}</td>
+              <td>Rp{{ toRp(item.subtotal) }}</td>
+            </tr>
+        </tbody>
+      </table>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import convertRp from '@/helper/convertRupiah.js';
 
 export default {
+  name: 'SalesItem',
   data() {
     return {
-      tableData: [
-        {
-          waktu: '2016-05-03',
-          total: 100000,
-          buyerMoney: 200000,
-          change: 100000
-        },
-        {
-          waktu: '2016-05-02',
-          total: 50000,
-          buyerMoney: 60000,
-          change: 0
-        },
-        {
-          waktu: '2016-05-02',
-          total: 50000,
-          buyerMoney: 60000,
-          change: 0
-        },
-        {
-          waktu: '2016-05-02',
-          total: 50000,
-          buyerMoney: 60000,
-          change: 0
-        },
-      ]
+      centerDialogVisible: false,
     }
   },
   computed: {      
+    ...mapGetters(['dataTransaksi', 'dataFakur']),
+    tableData() {
+      return this.dataFakur
+    },
     toRp(){
       return (val) =>  convertRp(val);
     }
   },
   methods: {
-      handleEdit(index, row) {
-        console.log(index, row);
-      },
-      handleDelete(index, row) {
-        console.log(index, row);
-      }
+    ...mapActions(['getTransactionByInvoiceId', 'getTransaction']),
+    imageData(image) {
+      // eslint-disable-next-line no-undef
+      return `${process.env.VUE_APP_API_RESOURCE}/uploads/products/${image}`
+    },
+    detailInvoice(params) {
+      this.centerDialogVisible = !this.centerDialogVisible;
+      let data = this.$store.getters.dataFakur.find((item) => item.id_invoice === params);
+      this.getTransaction(data.transactions);
     }
+  },
 }
 </script>
+
+<style scoped>
+.transactions {
+  text-align: left;
+}
+
+#invoice-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#invoice-table td,
+#invoice-table th {
+  border: 1px solid #ddd;
+  padding: 12px;
+}
+
+#invoice-table tr:hover {
+  background-color: var(--secondary);
+}
+
+#invoice-table th {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-align: left;
+  background-color: var(--kasir-main-color);
+  color: white;
+}
+</style>

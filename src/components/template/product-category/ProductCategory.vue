@@ -43,7 +43,12 @@ export default {
           this.handleLoading(false);
         }, 500);
       }else{
-        alert("Gagal, silahkan reload halaman")
+        this.$message({
+          showClose: true,
+          message: 'Produk tidak tersedia',
+          type: 'warning'
+        });
+        this.handleLoading(false);
       }
     },
     handleLoading(params) {

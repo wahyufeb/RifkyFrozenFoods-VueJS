@@ -14,7 +14,7 @@
             :picker-options="pickerOptions">
           </el-date-picker>
         </div>
-        <div v-if="warehouseMode">
+        <div v-if="isLevel === 'warehouse' || isLevel === 'admin' ">
           <el-select v-model="selectValue" slot="prepend" placeholder="Select">
             <el-option label="Restaurant" value="1"></el-option>
             <el-option label="Order No." value="2"></el-option>
@@ -27,26 +27,30 @@
           <el-button type="danger" @click="filterReset">Reset</el-button>
         </div>
         <div>
-          <el-button type="primary">Urutkan</el-button>
+          <el-button type="primary" @click="filterInvoice">Urutkan</el-button>
         </div>
-        <div v-if="warehouseMode">
+        <div v-if="isLevel === 'warehouse' || isLevel === 'admin' ">
           <el-button type="success">Cetak Data</el-button>
         </div>
       </div>
     </div>
-    <div class="sales-items-data">
-      <SalesItem />
+    <div v-show="filterDate" id="filter-title">
+      Data diurutkan dari <b>{{ dateData.startDate }}</b> ke <b>{{ dateData.endDate }} </b>
+    </div>
+    <div class="sales-items-data" v-loading="loadingData">
+      <SalesItem/>
     </div>
 </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import SalesItem from '@/components/template/sales/SalesItem';
 
 export default {
   name: 'SalesData',
   props: {
-    warehouseMode: Boolean
+    isLevel: String
   },
   components: {
     SalesItem,
@@ -81,15 +85,48 @@ export default {
         }]
       },
       datePickerValue: '',
-      selectValue:''
+      selectValue:'',
+      filterDate: false,
+      dateData: {
+        startDate: '',
+        endDate: '',
+      },
+      loadingData: false,
     };
   },
   methods: {
+    ...mapActions(['getInvoices', 'getInvoicesByDate']),
     filterReset() {
+      this.loadingData = true;
       this.datePickerValue = '';
       this.selectValue = '';
+      this.filterDate = false;
+      this.dateData.startDate = ''
+      this.dateData.endDate = ''
+      this.getInvoices()
+      .then((response) => {
+        if(response.code === 200 || response.code === 404) {
+          this.loadingData = false
+        }
+      })
+    },
+    filterInvoice() {
+      this.loadingData = true;
+      const startDate = this.datePickerValue[0].toLocaleDateString('fr-CA');
+      const endDate = this.datePickerValue[1].toLocaleDateString('fr-CA');
+      
+      this.dateData.startDate = startDate;
+      this.dateData.endDate = endDate;
+      this.filterDate = true;
+
+      this.getInvoicesByDate({startDate, endDate})
+      .then((response) => {
+        if(response.code === 200 || response.code === 404) {
+          this.loadingData = false;
+        }
+      })
     }
-  }
+  },
 };
 </script>
 
@@ -127,6 +164,11 @@ export default {
 
 #picker * {
   width: 100%;
+}
+
+#filter-title {
+  font-size: 16px;
+  text-align: center;
 }
 
 .sales-items-data {
