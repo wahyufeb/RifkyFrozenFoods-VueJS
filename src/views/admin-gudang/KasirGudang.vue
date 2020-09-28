@@ -6,7 +6,7 @@
           Aplikasi Kasir Gudang
         </div>
         <div class="main-content__content" v-loading="loadingData">
-          <Search title="Cari Barang" />
+          <Search title="Cari Barang" :isAdmin="false"/>
           <ProductCategory :handleLoadingData="handleLoadingData" />
           <ProductList :handleLoadingData="handleLoadingData"/>
         </div>

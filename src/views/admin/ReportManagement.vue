@@ -17,7 +17,7 @@
           Data Transaksi pada ...
         </div>
         <div class="sales__data">
-          <SalesData :warehouseMode="true"/>
+          <SalesData isLevel="admin"/>
         </div>
       </div>
     </div>

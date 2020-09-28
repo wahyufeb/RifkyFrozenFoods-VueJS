@@ -14,7 +14,7 @@
           Data Transaksi pada Kios 
         </div>
         <div class="sales__data">
-          <SalesData warehouseMode="true"/>
+          <SalesData isLevel="warehouse"/>
         </div>
       </div>
     </div>
