@@ -11,7 +11,7 @@
       </el-row>
       <div class="sales">
         <div class="sales__title">
-          Data Transaksi pada {{this.userData.store.name}} - {{this.userData.store.location}}
+          Data Transaksi pada {{this.userData.store.name}} - {{this.userData.store.location}} Hari Ini
         </div>
         <div v-if="loadingData">
           <div v-loading="loadingData"></div>
@@ -44,11 +44,12 @@ export default {
     ...mapGetters(['userData', 'totalIncomeToday'])
   },
   methods: {
-    ...mapActions(['getTotalIncomeToday', 'getInvoices'])
+    ...mapActions(['getTotalIncomeTodayByStoreId', 'getInvoicesTodayByStoreId'])
   },
   mounted() {
-    this.getTotalIncomeToday()
-    this.getInvoices()
+    let id_store = this.userData.id_store;
+    this.getTotalIncomeTodayByStoreId(id_store)
+    this.getInvoicesTodayByStoreId(id_store)
     .then((response) => {
       if(response.code === 200 || response.code === 404) {
         this.loadingData = false

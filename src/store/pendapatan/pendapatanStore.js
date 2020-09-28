@@ -41,6 +41,18 @@ const actions = {
       commit('setTotalIncomeToday', resTotalIncomeToday.data);
     }
   },
+  async getTotalIncomeTodayByStoreId({ commit }, id_store) {
+    let token = setDecryptCookie('TOKEN', null);
+    const reqTotalIncomeTodayStoreId = await axios.get(`${process.env.VUE_APP_BASE_API}/invoice/${id_store}/total-income-today`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const resTotalIncomeTodayStoreId = await reqTotalIncomeTodayStoreId.data;
+    if (resTotalIncomeTodayStoreId.code === 200) {
+      commit('setTotalIncomeToday', resTotalIncomeTodayStoreId.data);
+    }
+  },
 };
 
 const mutations = {

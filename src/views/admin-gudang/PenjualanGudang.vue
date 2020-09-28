@@ -6,7 +6,7 @@
     <div class="main-content__content">
       <el-row>
         <el-col :lg="6">
-          <Jumbotron title="Pendapatan Keseluruhan Hari Ini" data="2500000" :formatRupiah="true"/>
+          <Jumbotron title="Pendapatan Hari Ini" :data="totalIncomeToday" :formatRupiah="true"/>
         </el-col>
       </el-row>
       <div class="sales">
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import Jumbotron from '@/components/template/jumbotron/Jumbotron.vue';
 import SalesData from '@/components/template/sales/SalesData.vue';
 
@@ -31,6 +32,28 @@ export default {
     Jumbotron,
     SalesData,
   },
+  data() {
+    return {
+      loadingData: true,
+    }
+  },
+  computed: {
+    ...mapGetters(['userData', 'totalIncomeToday'])
+  },
+  methods: {
+    ...mapActions(['getTotalIncomeToday', 'getInvoices'])
+  },
+  mounted() {
+    this.getTotalIncomeToday()
+    this.getInvoices()
+    .then((response) => {
+      if(response.code === 200 || response.code === 404) {
+        this.loadingData = false
+      }
+    }).catch((err) => {
+      console.log(err)
+    });
+  }
 }
 </script>
 

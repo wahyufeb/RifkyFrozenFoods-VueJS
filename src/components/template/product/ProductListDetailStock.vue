@@ -13,7 +13,7 @@
                 Kategori : {{ produk.category.name }}
               </div>
               <div class="product-list-detail__stock">
-                <!-- Stok : {{ toRp(produk.stock) }} -->
+                Stok : {{ toRp(produk.stock) }}
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@ export default {
       this.handleLoadingData(params)
     }
   },
-  created() {
+  mounted() {
     let id_store = this.userData.id_store
     this.getProductStorageByStoreId(id_store)
     .then((response) => {

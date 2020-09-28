@@ -52,7 +52,8 @@ const actions = {
           id_invoice: resSaveInvoice.data.id_invoice,
           id_product: item.id_product,
           qty: item.qty,
-          subtotal: item.subtotal
+          subtotal: item.subtotal,
+          id_store: resSaveInvoice.data.id_store
         }
         dispatch('checkoutCashier', transactionData);
       })

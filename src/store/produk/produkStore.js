@@ -243,10 +243,17 @@ const mutations = {
     let result = []
     data.filter((productItem) => {
       result.push(productItem.product)
-      result.map((data) => {
-        data.stock = productItem.stock
-      })
     });
+    let stock = [];
+    data.map((data) => {
+      let a = { stock: data.stock }
+      stock.push(a)
+    });
+
+    stock.map((stockData, i) => {
+      result[i].stock = stockData.stock
+    })
+
     state.produk = result;
   },
   setPriceProductCreated(state, data) {

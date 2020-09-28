@@ -14,13 +14,6 @@
             :picker-options="pickerOptions">
           </el-date-picker>
         </div>
-        <div v-if="isLevel === 'warehouse' || isLevel === 'admin' ">
-          <el-select v-model="selectValue" slot="prepend" placeholder="Select">
-            <el-option label="Restaurant" value="1"></el-option>
-            <el-option label="Order No." value="2"></el-option>
-            <el-option label="Tel" value="3"></el-option>
-          </el-select>
-        </div>
       </div>
       <div class="sales__data__buttons">
         <div>
@@ -44,7 +37,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import SalesItem from '@/components/template/sales/SalesItem';
 
 export default {
@@ -54,6 +47,9 @@ export default {
   },
   components: {
     SalesItem,
+  },
+  computed: {
+    ...mapGetters(['userData']),
   },
   data() {
     return {
@@ -95,36 +91,69 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['getInvoices', 'getInvoicesByDate']),
+    ...mapActions(['getInvoices', 'getInvoicesByDate', 'getInvoicesStoreByDate', 'getInvoicesTodayByStoreId']),
     filterReset() {
       this.loadingData = true;
       this.datePickerValue = '';
       this.selectValue = '';
       this.filterDate = false;
-      this.dateData.startDate = ''
-      this.dateData.endDate = ''
-      this.getInvoices()
-      .then((response) => {
-        if(response.code === 200 || response.code === 404) {
-          this.loadingData = false
-        }
-      })
+      this.dateData.startDate = '';
+      this.dateData.endDate = '';
+
+      if(this.isLevel === 'cashier'){
+        this.getInvoicesTodayByStoreId(this.userData.id_store)
+        .then((response) => {
+          if(response.code === 200 || response.code === 404) {
+            this.loadingData = false
+          }
+        });
+      }else{
+        this.getInvoices()
+        .then((response) => {
+          if(response.code === 200 || response.code === 404) {
+            this.loadingData = false
+          }
+        });
+      }
+
     },
     filterInvoice() {
       this.loadingData = true;
-      const startDate = this.datePickerValue[0].toLocaleDateString('fr-CA');
-      const endDate = this.datePickerValue[1].toLocaleDateString('fr-CA');
-      
-      this.dateData.startDate = startDate;
-      this.dateData.endDate = endDate;
-      this.filterDate = true;
+      if(this.datePickerValue === ''){
+        this.$message({
+          showClose: true,
+          message: 'Start Date dan End Date Tidak Boleh Kosong',
+          type: 'error'
+        });
+        this.loadingData = false;
+      }else{
+        const startDate = this.datePickerValue[0].toLocaleDateString('fr-CA');
+        const endDate = this.datePickerValue[1].toLocaleDateString('fr-CA');
 
-      this.getInvoicesByDate({startDate, endDate})
-      .then((response) => {
-        if(response.code === 200 || response.code === 404) {
-          this.loadingData = false;
+        this.dateData.startDate = startDate;
+        this.dateData.endDate = endDate;
+        this.filterDate = true;
+
+        if(this.isLevel === 'cashier'){
+          this.getInvoicesStoreByDate({
+            id_store: this.userData.id_store,
+            startDate,
+            endDate,
+          })
+          .then((response) => {
+            if(response.code === 200 || response.code === 404) {
+              this.loadingData = false;
+            }
+          })
+        }else{
+          this.getInvoicesByDate({startDate, endDate})
+          .then((response) => {
+            if(response.code === 200 || response.code === 404) {
+              this.loadingData = false;
+            }
+          })
         }
-      })
+      }
     }
   },
 };

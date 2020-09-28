@@ -29,6 +29,12 @@
       </template>
     </el-table-column>
     <el-table-column
+      label="Kios/Gudang">
+      <template slot-scope="scope">
+        <span style="margin-left: 10px">{{ scope.row.store.name }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column
       label="Detail">
       <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
