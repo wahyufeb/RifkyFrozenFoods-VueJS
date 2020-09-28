@@ -28,6 +28,9 @@ import pengguna from './pengguna/penggunaStore.js';
 // Fakur
 import fakur from './fakur/fakurStore.js';
 
+// Transaksi
+import transaksi from './transaksi/transaksiStore.js';
+
 Vue.use(Vuex);
 
 const createStore = () => {
@@ -44,6 +47,7 @@ const createStore = () => {
       kios,
       pengguna,
       fakur,
+      transaksi
     },
   });
 };

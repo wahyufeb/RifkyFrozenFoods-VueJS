@@ -22,11 +22,17 @@ const getters = {
           return state.produk;
         }
       } else if (type === 'filter') {
-        return state.produkTerfilter = state.produk.filter((produkItem) => produkItem.category.id_product_category == data);
+        let dataProdukTerfilter = state.produk.filter((produkItem) => produkItem.category.id_product_category == data);
+        if (dataProdukTerfilter.length === 0) {
+          return state.produkTerfilter = [];
+        } else {
+          return state.produkTerfilter = dataProdukTerfilter;
+        }
       } else if (type === 'search') {
-        console.log(state.produk.filter((productItem) => {
+        let searchResult = state.produk.filter((productItem) => {
           return data.toLowerCase().split(' ').every(key => productItem.name.toLowerCase().includes(key))
-        }))
+        });
+        return state.produkTerfilter = searchResult;
       }
     }
   },
@@ -196,6 +202,40 @@ const actions = {
     return resSearchProduct;
 
   },
+  // Warehouse only
+  async saveIncomingGoodsProcess({ commit }, data) {
+    let token = setDecryptCookie('TOKEN', null);
+    let headerConfig = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+
+    // eslint-disable-next-line no-undef
+    const reqSaveIncomingGoods = await axios.post(`${process.env.VUE_APP_BASE_API}/product-storage/incoming-goods`, data, headerConfig);
+    const resSaveIncomingGoods = await reqSaveIncomingGoods.data;
+    if (resSaveIncomingGoods.code === 201) {
+      commit('setProductCreated', resSaveIncomingGoods.data.product);
+    }
+    return resSaveIncomingGoods;
+  },
+  async saveExitingItem({ commit }, data) {
+    let token = setDecryptCookie('TOKEN', null);
+    let headerConfig = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+
+    // eslint-disable-next-line no-undef
+    const reqSaveExitingItem = await axios.post(`${process.env.VUE_APP_BASE_API}/product-storage/exit-item`, data, headerConfig);
+    const resSaveExitingItem = await reqSaveExitingItem.data;
+    console.log(resSaveExitingItem);
+    if (resSaveExitingItem.code === 201) {
+      commit('setProductLoaded', resSaveExitingItem.data.product);
+    }
+    return resSaveExitingItem;
+  }
 };
 
 const mutations = {
@@ -203,6 +243,9 @@ const mutations = {
     let result = []
     data.filter((productItem) => {
       result.push(productItem.product)
+      result.map((data) => {
+        data.stock = productItem.stock
+      })
     });
     state.produk = result;
   },
