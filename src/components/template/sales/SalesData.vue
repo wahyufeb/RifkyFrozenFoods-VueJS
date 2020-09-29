@@ -23,7 +23,7 @@
           <el-button type="primary" @click="filterInvoice">Urutkan</el-button>
         </div>
         <div v-if="isLevel === 'warehouse' || isLevel === 'admin' ">
-          <el-button type="success">Cetak Data</el-button>
+          <el-button type="success" @click="print">Cetak Data</el-button>
         </div>
       </div>
     </div>
@@ -33,11 +33,66 @@
     <div class="sales-items-data" v-loading="loadingData">
       <SalesItem/>
     </div>
+      <div id="printMe" style="display:none;">
+        <div class="mb-3">
+          <h5 class="text-center">Laporan Data Transaksi</h5>
+          <h6 class="text-center">Rifky Frozen Foods</h6>
+        </div>
+
+        <p>Totak Pendapatan Keseluruhan : Rp{{ toRp(totalIncome) }}</p>
+        <p>Total Pendapatan Hari Ini : Rp{{ totalIncomeToday }}</p>
+
+        <table class="table table-bordered" id="invoice-table" >
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Waktu</th>
+              <th>Uang Pembeli </th>
+              <th>Kembalian </th>
+              <th>Kasir </th>
+              <th>Total</th>
+              <th>Detail Produk</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr class="transactions" v-for="(item, i) in dataFakur" :key="item.id_invoice">
+                <td>{{ i+1 }}.</td>
+                <td>
+                  {{ item.date }}
+                </td>
+                <td>Rp{{ toRp(item.buyer_money) }}</td>
+                <td>Rp{{ toRp(item.change_money) }}</td>
+                <td v-if="item.cashier === null">Admin Gudang</td>
+                <td v-else>{{ item.cashier.name }}</td>
+                <td>Rp{{ toRp(item.total) }}</td>
+                <td>
+                  <table style="width:100%">
+                    <thead>
+                      <td>Nama</td>
+                      <td>Qty</td>
+                      <td>Subtotal</td>
+                    </thead>
+                    <tbody>
+                      <tr class="transactions" v-for="(data) in item.transactions" :key="data.id_transaction">
+                        <td>
+                          {{ data.product.name }}
+                        </td>
+                        <td>{{ data.qty }}</td>
+                        <td>Rp{{ toRp(data.subtotal) }}</td>
+                      </tr>
+                    </tbody>
+                  </table>                  
+                </td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
 </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import convertRp from '@/helper/convertRupiah.js';
 import SalesItem from '@/components/template/sales/SalesItem';
 
 export default {
@@ -49,7 +104,10 @@ export default {
     SalesItem,
   },
   computed: {
-    ...mapGetters(['userData']),
+    ...mapGetters(['userData', 'dataFakur', 'totalIncome', 'totalIncomeToday']),
+    toRp(){
+      return (val) =>  convertRp(val);
+    }
   },
   data() {
     return {
@@ -92,6 +150,9 @@ export default {
   },
   methods: {
     ...mapActions(['getInvoices', 'getInvoicesByDate', 'getInvoicesStoreByDate', 'getInvoicesTodayByStoreId']),
+    print() {
+      this.$htmlToPaper('printMe');
+    },
     filterReset() {
       this.loadingData = true;
       this.datePickerValue = '';
@@ -154,7 +215,7 @@ export default {
           })
         }
       }
-    }
+    },
   },
 };
 </script>
@@ -202,6 +263,30 @@ export default {
 
 .sales-items-data {
   margin-top: 20px;
+}
+
+/* Table */
+#invoice-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#invoice-table td,
+#invoice-table th {
+  border: 1px solid #ddd;
+  padding: 12px;
+}
+
+#invoice-table tr:hover {
+  background-color: var(--secondary);
+}
+
+#invoice-table th {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-align: left;
+  background-color: var(--kasir-main-color);
+  color: white;
 }
 
 button {

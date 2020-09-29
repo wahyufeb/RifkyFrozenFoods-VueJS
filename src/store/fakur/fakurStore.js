@@ -3,11 +3,13 @@ import axios from 'axios';
 import { setDecryptCookie } from '@/helper/setCookie.js';
 
 const state = {
-  fakur: []
+  fakur: [],
+  isPrint: false
 };
 
 const getters = {
   dataFakur: state => state.fakur.reverse(),
+  printValue: state => state.isPrint,
 };
 
 const actions = {
@@ -64,6 +66,9 @@ const actions = {
 const mutations = {
   setInvoiceLoaded(state, data) {
     state.fakur = data;
+  },
+  setPrint(state) {
+    state.isPrint = !state.isPrint;
   }
 };
 

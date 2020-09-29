@@ -45,9 +45,10 @@ export default {
     ...mapGetters(['userData', 'totalIncomeToday'])
   },
   methods: {
-    ...mapActions(['getTotalIncomeToday', 'getInvoices'])
+    ...mapActions(['getTotalIncome', 'getTotalIncomeToday', 'getInvoices'])
   },
   mounted() {
+    this.getTotalIncome()
     this.getTotalIncomeToday()
     this.getInvoices()
     .then((response) => {

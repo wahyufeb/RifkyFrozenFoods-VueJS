@@ -103,7 +103,7 @@ export default {
       this.centerDialogVisible = !this.centerDialogVisible;
       let data = this.$store.getters.dataFakur.find((item) => item.id_invoice === params);
       this.getTransaction(data.transactions);
-    }
+    },
   },
 }
 </script>
