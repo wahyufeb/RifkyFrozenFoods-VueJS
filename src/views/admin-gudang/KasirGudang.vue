@@ -32,6 +32,7 @@ import Cart from '@/components/template/cart/Cart.vue';
 
 export default {
   name: 'KasirGudang',
+  title:'Kasir Application - Warehouse Page',
   components: {
     Search,
     ProductCategory,

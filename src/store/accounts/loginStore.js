@@ -47,7 +47,7 @@ const actions = {
     }
     return reqRefreshTokenApi;
 
-  }
+  },
 };
 
 const mutations = {
@@ -62,7 +62,7 @@ const mutations = {
   },
   currentAuth(state, data) {
     state.userData = data;
-  }
+  },
 };
 
 export default {

@@ -53,6 +53,7 @@ import ProductListDetailStock from '@/components/template/product/ProductListDet
 
 export default {
   name: 'StokBarangGudang',
+  title:'Stok Barang - Warehouse Page',
   components: {
     ProductCategorySidebar,
     ProductListDetailStock,

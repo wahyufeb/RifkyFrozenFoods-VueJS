@@ -134,6 +134,7 @@ export default {
           });
         }
       })
+      this.name = '';
       this.formData.id_product = '';
       this.formData.id_store = '';
       this.formData.stock = '';

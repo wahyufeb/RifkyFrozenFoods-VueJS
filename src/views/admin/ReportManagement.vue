@@ -14,9 +14,12 @@
       </el-row>
       <div class="sales">
         <div class="sales__title">
-          Data Transaksi pada ...
+          Seluruh Data Transaksi dan Invoice
         </div>
-        <div class="sales__data">
+        <div v-if="loadingData">
+          <div v-loading="loadingData"></div>
+        </div>
+        <div v-else class="sales__data">
           <SalesData isLevel="admin"/>
         </div>
       </div>
@@ -36,15 +39,28 @@ export default {
     Jumbotron,
     SalesData,
   },
+  data() {
+    return {
+      loadingData: true,
+    }
+  },
   computed: {
     ...mapGetters(['totalIncome', 'totalIncomeToday'])
   },
   methods: {
-    ...mapActions(['getTotalIncome', 'getTotalIncomeToday']),
+    ...mapActions(['getTotalIncome', 'getTotalIncomeToday', 'getInvoices']),
   },
   created() {
     this.getTotalIncome()
     this.getTotalIncomeToday()
+    this.getInvoices()
+    .then((response) => {
+      if(response.code === 200 || response.code === 404) {
+        this.loadingData = false
+      }
+    }).catch((err) => {
+      console.log(err)
+    });
   }
 }
 </script>

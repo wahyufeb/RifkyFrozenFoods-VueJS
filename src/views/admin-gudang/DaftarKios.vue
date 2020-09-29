@@ -36,6 +36,7 @@ import StoreList from '@/components/template/stores/StoreList.vue';
 
 export default {
   name: 'DaftarKios',
+  title:'Daftar Kios - Warehouse Page',
   components: {
     StoreList,
     AddStore,

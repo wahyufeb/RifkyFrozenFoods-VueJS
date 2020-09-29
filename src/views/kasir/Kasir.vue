@@ -32,6 +32,7 @@ import Cart from '@/components/template/cart/Cart.vue';
 
 export default {
   name: 'Kasir',
+  title:'Kasir Application - Cashier Page',
   components: {
     Search,
     ProductCategory,

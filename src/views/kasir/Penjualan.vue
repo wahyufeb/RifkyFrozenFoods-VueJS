@@ -31,6 +31,7 @@ import SalesData from '@/components/template/sales/SalesData.vue';
 
 export default {
   name: 'Penjualan',
+  title:'Penjualan Hari Ini - Cashier Page',
   components: {
     Jumbotron,
     SalesData,

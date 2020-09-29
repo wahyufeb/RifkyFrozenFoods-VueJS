@@ -230,15 +230,20 @@ const actions = {
     // eslint-disable-next-line no-undef
     const reqSaveExitingItem = await axios.post(`${process.env.VUE_APP_BASE_API}/product-storage/exit-item`, data, headerConfig);
     const resSaveExitingItem = await reqSaveExitingItem.data;
-    console.log(resSaveExitingItem);
     if (resSaveExitingItem.code === 201) {
-      commit('setProductLoaded', resSaveExitingItem.data.product);
+      commit('coba', resSaveExitingItem.data);
     }
     return resSaveExitingItem;
   }
 };
 
 const mutations = {
+  coba(state, data) {
+    let productId = state.produk.find((item) => {
+      return item.id_product === data.dari.id_product
+    })
+    productId.stock = data.dari.stock;
+  },
   setProductStorageLoaded(state, data) {
     let result = []
     data.filter((productItem) => {

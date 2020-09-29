@@ -11,9 +11,12 @@
       </el-row>
       <div class="sales">
         <div class="sales__title">
-          Data Transaksi pada Kios 
+          Seluruh Data Transaksi dan Invoice
         </div>
-        <div class="sales__data">
+        <div v-if="loadingData">
+          <div v-loading="loadingData"></div>
+        </div>
+        <div v-else class="sales__data">
           <SalesData isLevel="warehouse"/>
         </div>
       </div>
@@ -28,6 +31,7 @@ import SalesData from '@/components/template/sales/SalesData.vue';
 
 export default {
   name: 'PenjualanGudang',
+  title:'Data Penjualan - Warehouse Page',
   components: {
     Jumbotron,
     SalesData,

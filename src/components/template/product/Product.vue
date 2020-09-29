@@ -56,6 +56,10 @@ export default {
   margin-bottom: 20px;
 }
 
+.product:hover {
+  cursor: pointer;
+}
+
 .product img {
   width: 100px;
   height: 100px;

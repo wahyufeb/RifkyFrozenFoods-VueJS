@@ -12,10 +12,18 @@
         <div class="kasir__sidebar__name">{{item.name}}</div>
       </router-link>
     </div>
+    
+    <el-tooltip class="item" effect="dark" content="Logout" placement="right">
+      <el-button id="btn-logout" type="danger" @click="handleLogout">
+        Keluar dari aplikasi
+      </el-button>
+    </el-tooltip>
   </div>
 </template>
 
 <script>
+import Cookies from 'js-cookie';
+import { mapActions } from 'vuex';
 export default {
   name: 'SidebarAdmin',
   props: {
@@ -29,6 +37,16 @@ export default {
       return `${process.env.VUE_APP_API_RESOURCE}/uploads/photo/${this.photo}`
     }
   },
+  methods: {
+    ...mapActions(['logoutUserProcess']),
+    handleLogout() {
+      Cookies.remove('ID')
+      Cookies.remove('ROILE')
+      Cookies.remove('REFRESH_TOKEN')
+      Cookies.remove('TOKEN')
+      document.location.reload();
+    }
+  }
 };
 </script>
 
@@ -82,6 +100,12 @@ export default {
 
 .kasir__sidebar__link i {
   font-size: 20px;
+}
+
+#btn-logout {
+  background-color: rgb(226, 77, 92);
+  color: #fff;
+  margin-top: 20px;
 }
 
 @media only screen and (max-width: 768px) {

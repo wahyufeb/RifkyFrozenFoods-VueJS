@@ -43,6 +43,7 @@ import { mapActions } from 'vuex';
 
 export default {
   name: 'Login',
+  title: 'Login Page',
   computed: {
     roleName() {
       return this.roles[this.roleActive].name;

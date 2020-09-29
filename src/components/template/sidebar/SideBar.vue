@@ -11,10 +11,19 @@
         <i :class="item.icon"></i>
       </router-link>
     </div>
-  </div>
+    
+    <el-tooltip class="item" effect="dark" content="Logout" placement="right">
+      <el-button circle id="btn-logout" type="danger" @click="handleLogout">
+        <i class="el-icon-warning-outline"></i>
+      </el-button>
+    </el-tooltip>
+
+    </div>
 </template>
 
 <script>
+import Cookies from 'js-cookie';
+import { mapActions } from 'vuex';
 export default {
   props: {
     menu: Array,
@@ -22,10 +31,18 @@ export default {
     photo: String,
   },
   methods: {
+    ...mapActions(['logoutUserProcess']),
     photoData(photo) {
       // eslint-disable-next-line no-undef
       return `${process.env.VUE_APP_API_RESOURCE}/uploads/photo/${photo}`
     },
+    handleLogout() {
+      Cookies.remove('ID')
+      Cookies.remove('ROILE')
+      Cookies.remove('REFRESH_TOKEN')
+      Cookies.remove('TOKEN')
+      document.location.reload();
+    }
   }
 };
 </script>
@@ -68,6 +85,18 @@ export default {
 
 .kasir__sidebar__link i {
   font-size: 20px;
+}
+
+#btn-logout {
+  background-color: rgb(226, 77, 92);
+  color: #fff;
+  margin-top: 20px;
+}
+
+#btn-logout:hover {
+  border: 2px solid var(--kasir-main-color);
+  background-color: var(--secondary);
+  color: var(--kasir-main-color);
 }
 
 @media only screen and (max-width: 768px) {

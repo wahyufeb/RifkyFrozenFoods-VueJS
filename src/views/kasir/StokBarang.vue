@@ -26,6 +26,7 @@ import ProductListDetailStock from '@/components/template/product/ProductListDet
 
 export default {
   name: 'StokBarang',
+  title:'Stok Barang - Cashier Page',
   components: {
     ProductCategorySidebar,
     ProductListDetailStock
