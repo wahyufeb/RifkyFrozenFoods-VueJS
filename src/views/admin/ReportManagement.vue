@@ -5,10 +5,10 @@
     </div>
     <div class="main-content__content">
       <el-row>
-        <el-col :lg="7">
+        <el-col :lg="7" :sm="11">
           <Jumbotron title="Total Pendapatan Selama Ini" :data="totalIncome" :formatRupiah="true"/>
         </el-col>
-        <el-col :lg="7" :offset="1">
+        <el-col :lg="7" :sm="11" :offset="1">
           <Jumbotron title="Total Pendapatan Hari Ini" :data="totalIncomeToday" :formatRupiah="true"/>
         </el-col>
       </el-row>
@@ -69,5 +69,12 @@ export default {
 .sales__title {
   margin-top: 30px;
   margin-bottom: 10px;
+}
+
+/*  For Tab with 8 inch */
+@media only screen and (max-width: 970px) {
+  .main-content__content {
+    height: 100vh;
+  }
 }
 </style>

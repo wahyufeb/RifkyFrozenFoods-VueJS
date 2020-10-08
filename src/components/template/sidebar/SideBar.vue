@@ -103,5 +103,17 @@ export default {
   .kasir__main-content {
     margin-left: 0;
   }
+
+  .kasir__sidebar {
+    width: 60px;
+  }
+}
+
+/*  For Tab with 8 inch */
+@media only screen and (max-width: 970px) {
+  .kasir__sidebar {
+    width: 60px;
+    height: 110vh;
+  }
 }
 </style>

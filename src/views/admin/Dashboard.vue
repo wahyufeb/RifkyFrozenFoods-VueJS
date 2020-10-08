@@ -20,7 +20,9 @@
         </div>
       </div>
       <h4 id="kios">Kios/Gudang</h4>
-      <StoreList isLevel="admin"/>
+      <div class="store-list">
+        <StoreList isLevel="admin"/>
+      </div>
     </div>
   </div>
 </template>
@@ -82,6 +84,16 @@ h4 {
 @media only screen and (max-width: 1300px) {
   .main-content__content__data {
     flex-direction: column;
+  }
+}
+
+@media only screen and (max-width: 970px) {
+  .main-content__content {
+    height: 120vh;
+  }
+
+  .store-list {
+    height: 280px;
   }
 }
 </style>

@@ -53,6 +53,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   margin-bottom: 20px;
 }
 
@@ -82,6 +83,18 @@ export default {
   .product img {
     width: 120px;
     height: 120px;
+  }
+}
+
+/*  For Tab with 8 inch */
+@media only screen and (max-width: 970px) {
+  .product {
+    margin: 5px;
+  }
+
+  .product img {
+    width: 80px;
+    height: 80px;
   }
 }
 </style>

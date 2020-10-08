@@ -64,5 +64,9 @@ export default {
   .product-list {
     height: 380px;
   }
+
+  .product_detail {
+    font-size: 10px;
+  }
 }
 </style>

@@ -5,7 +5,7 @@
     </div>
     <div class="main-content__content">
       <el-row>
-        <el-col :lg="5">          
+        <el-col :lg="5" :sm="8">          
           <el-button type="primary" @click="handleDialogVisible">
             Tambahkan Pengguna
           </el-button>
@@ -99,6 +99,17 @@ button {
 @media only screen and (min-height: 630px) {
   .users-management {
     height: 470px;
+  }
+}
+
+/*  For Tab with 8 inch */
+@media only screen and (max-width: 970px) {
+  .main-content__content {
+    height: 120vh;
+  }
+
+  .users-management {
+    height: 100vh;
   }
 }
 </style>

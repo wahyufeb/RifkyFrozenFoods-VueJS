@@ -171,4 +171,18 @@ export default {
   width: 200px;
   font-weight: 600;
 }
+
+/*  For Tab with 8 inch */
+@media only screen and (max-width: 970px) {
+  .users__store {
+    font-size: 14px;
+  }
+
+  .users__data__admin,
+  .users__data__warehouse,
+  .users__data__cashier {
+    margin: 5px;
+    font-size: 12px;
+  }
+}
 </style>

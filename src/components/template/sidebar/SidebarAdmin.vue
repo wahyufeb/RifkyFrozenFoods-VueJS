@@ -15,7 +15,7 @@
     
     <el-tooltip class="item" effect="dark" content="Logout" placement="right">
       <el-button id="btn-logout" type="danger" @click="handleLogout">
-        Keluar dari aplikasi
+        Keluar
       </el-button>
     </el-tooltip>
   </div>
@@ -111,6 +111,13 @@ export default {
 @media only screen and (max-width: 768px) {
   .kasir__main-content {
     margin-left: 0;
+  }
+}
+
+@media only screen and (max-width: 970px) {
+  .kasir__sidebar {
+    width: 180px;
+    height: 130vh;
   }
 }
 </style>

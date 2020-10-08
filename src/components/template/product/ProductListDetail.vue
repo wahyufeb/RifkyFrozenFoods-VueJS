@@ -168,4 +168,20 @@ export default {
     height: 435px;
   }
 }
+
+/*  For Tab with 8 inch */
+@media only screen and (max-width: 970px) {
+  .product-list-detail {
+    padding: 0;
+  }
+
+  .product-list-detail__item__image img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .product-list-detail__data {
+    width: 160px;
+  }
+}
 </style>

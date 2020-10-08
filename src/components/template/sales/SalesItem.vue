@@ -47,7 +47,7 @@
     <el-dialog
       title="Detail Invoice"
       :visible.sync="centerDialogVisible"
-      width="35%"
+      width="40%"
       center>
       <table v-if="centerDialogVisible" id="invoice-table" >
         <thead>

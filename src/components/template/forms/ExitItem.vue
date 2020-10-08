@@ -33,7 +33,7 @@
       prop="stock"
       label="Jumlah stok produk"
       :rules="rules.stock">
-        <el-input placeholder="Stok produk" v-model="formData.stock"></el-input>
+        <el-input type="number" placeholder="Stok produk" v-model="formData.stock"></el-input>
       </el-form-item>
       <el-button type="primary" @click="submitExitingItem">Tambahkan Barang Keluar</el-button>
     </el-form>
@@ -189,5 +189,12 @@ export default {
 
 button {
   width: 100%;
+}
+
+/*  For Tab with 8 inch */
+@media only screen and (max-width: 970px) {
+  .title-form {
+    font-size: 14px;
+  }
 }
 </style>

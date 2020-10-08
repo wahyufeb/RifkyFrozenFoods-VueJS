@@ -5,7 +5,7 @@
       </div>
     <div class="main-content__content">
       <el-row>
-        <el-col :lg="4">           
+        <el-col :lg="4" :sm="6">           
           <el-button type="primary" @click="handleDialogVisible">
             Buka Kios
           </el-button>
@@ -81,5 +81,12 @@ export default {
 
 button {
   width: 100%;
+}
+
+/*  For Tab with 8 inch */
+@media only screen and (max-width: 970px) {
+  .main-content__content {
+    height: 100vh;
+  }
 }
 </style>

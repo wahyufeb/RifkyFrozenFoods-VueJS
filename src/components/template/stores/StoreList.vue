@@ -64,6 +64,8 @@ export default {
   background-color: var(--gray-color);
   padding: 10px;
   border-radius: 10px;
+  height: 350px;
+  overflow: auto;
 }
 
 .store-item-wrapper {

@@ -18,7 +18,7 @@
           <div class="buyer">
             <div class="buyer__data">
               Uang Pembeli
-              <el-input style="width:140px" placeholder="Uang pembeli" v-model="uangPembeli"></el-input>
+              <el-input type="number" style="width:140px" placeholder="Uang pembeli" v-model="uangPembeli"></el-input>
             </div>
             <div class="buyer__data">
               Uang Kembalian
@@ -181,6 +181,13 @@ export default {
   }
   .cart-items {
     height: 490px;
+  }
+}
+
+/*  For Tab with 8 inch */
+@media only screen and (max-width: 970px) {
+  .cart {
+    padding: 2px;
   }
 }
 </style>

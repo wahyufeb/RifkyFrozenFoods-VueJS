@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <el-row>
-      <el-col :lg="16">
+      <el-col :lg="16" :sm="14">
         <div class="main-content__title">
           Aplikasi Kasir Gudang
         </div>
@@ -11,7 +11,7 @@
           <ProductList :handleLoadingData="handleLoadingData"/>
         </div>
       </el-col>
-      <el-col :lg="7" :offset="1">
+      <el-col :lg="7" :sm="9" :offset="1">
         <div class="main-content__title">
           Keranjang Belanja
         </div>
@@ -59,5 +59,16 @@ export default {
   border-radius: 10px;
   padding: 10px;
   box-shadow: 5px 5px 20px rgba(210, 210, 210, 0.2);
+}
+
+/*  For Tab with 8 inch */
+@media only screen and (max-width: 970px) {
+  .main-content__content {
+    height: 100vh;
+  }
+
+  .main-content__cart {
+    height: 100vh;
+  }
 }
 </style>

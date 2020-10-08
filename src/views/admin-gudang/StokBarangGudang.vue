@@ -5,12 +5,12 @@
       </div>
     <div class="main-content__content">
       <el-row>
-        <el-col :lg="4">          
+        <el-col :lg="4" :sm="6">          
           <el-button type="primary" @click="productStorageModal('incomingGoods')">
             Barang Masuk
           </el-button>
         </el-col>
-        <el-col :lg="4" :offset="1">
+        <el-col :lg="4" :sm="6" :offset="1">
           <el-button type="danger" @click="productStorageModal('exitItem')">
             Barang Keluar
           </el-button>
@@ -20,10 +20,10 @@
         Barang yang ada di {{ userData.store.name }} - {{ userData.store.location }}
       </div>
       <el-row>
-        <el-col :lg="5">
+        <el-col :lg="5" :sm="5">
           <ProductCategorySidebar :isAdmin="false" :handleLoadingData="handleLoadingData" />
         </el-col>
-        <el-col :lg="18" :offset="1" v-loading="loadingData">
+        <el-col :lg="18" :sm="18" :offset="1" v-loading="loadingData">
           <ProductListDetailStock isLevel="warehouse" :handleLoadingData="handleLoadingData"/>
         </el-col>
       </el-row>  

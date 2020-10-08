@@ -8,10 +8,10 @@
         Barang yang ada di {{ userData.store.name }} - {{ userData.store.location }} 
       </div>
       <el-row>
-        <el-col :lg="5">
+        <el-col :lg="5" :sm="5">
           <ProductCategorySidebar :isAdmin="false" :handleLoadingData="handleLoadingData" />
         </el-col>
-        <el-col :lg="18" :offset="1" v-loading="loadingData">
+        <el-col :lg="18" :sm="18" :offset="1" v-loading="loadingData">
           <ProductListDetailStock isLevel="cashier" :handleLoadingData="handleLoadingData"/>
         </el-col>
       </el-row>  

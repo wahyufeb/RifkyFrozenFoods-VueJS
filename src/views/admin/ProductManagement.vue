@@ -5,10 +5,10 @@
     </div>
     <div class="main-content__content">
       <el-row>
-        <el-col :lg="4">
+        <el-col :lg="4" :sm="6">
           <Jumbotron title="Total Produk" :data="totalProducts" :formatRupiah="false" :isAdmin="true"/>
         </el-col>
-        <el-col :lg="4" :offset="1">          
+        <el-col :lg="4" :sm="6" :offset="1">          
           <el-button type="primary" @click="handleDialogVisible">
             Tambah Produk
           </el-button>
@@ -18,10 +18,10 @@
         Daftar Produk  
       </div>
       <el-row >
-        <el-col :lg="5">
+        <el-col :lg="5" :sm="6" class="product-category">
           <ProductCategorySidebar :isAdmin="true" :handleLoadingData="handleLoadingData"/>
         </el-col>
-        <el-col :lg="18" :offset="1" v-loading="loadingData">
+        <el-col :lg="18" :sm="17" :offset="1" v-loading="loadingData" class="product-list-detail">
           <ProductListDetail :editProduct="editProduct" :handleLoadingData="handleLoadingData"/>
         </el-col>
       </el-row>  
@@ -90,5 +90,16 @@ export default {
 .main-content__data {
   display: flex;
   flex-direction: row;
+}
+
+@media only screen and (max-width: 970px) {
+  .main-content__content {
+    height: 120vh;
+  }
+
+  .product-list-detail,
+  .product-category {
+    height: 430px;
+  }
 }
 </style>

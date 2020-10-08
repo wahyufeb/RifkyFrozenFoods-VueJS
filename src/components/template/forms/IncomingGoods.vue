@@ -29,7 +29,7 @@
       prop="stock"
       label="Stok produk yang akan dimasukan"
       :rules="rules.stock">
-        <el-input placeholder="Stok produk" v-model="formData.stock"></el-input>
+        <el-input type="number" placeholder="Stok produk" v-model="formData.stock"></el-input>
       </el-form-item>
       <el-button type="primary" @click="submitIncomingGoods">Tambahkan Barang Masuk</el-button>
     </el-form>

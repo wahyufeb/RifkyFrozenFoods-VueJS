@@ -67,4 +67,11 @@ export default {
   margin-top: 30px;
   margin-bottom: 10px;
 }
+
+/*  For Tab with 8 inch */
+@media only screen and (max-width: 970px) {
+  .main-content__content {
+    height: 100vh;
+  }
+}
 </style>

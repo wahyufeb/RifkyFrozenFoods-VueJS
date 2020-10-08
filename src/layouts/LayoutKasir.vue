@@ -8,7 +8,7 @@
         <!-- sidebar -->
         <Sidebar :menu="kasirMenu" :photo="userData.photo" :username="userData.username"/>
       </el-col>
-      <el-col :xs="24" :sm="20" :md="21" :lg="21" :xl="21">
+      <el-col :xs="24" :sm="21" :md="21" :lg="21" :xl="21">
         <slot/> 
       </el-col>
     </el-row>
