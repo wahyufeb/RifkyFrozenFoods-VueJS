@@ -203,7 +203,7 @@ const actions = {
 
   },
   // Warehouse only
-  async saveIncomingGoodsProcess({ commit }, data) {
+  async saveIncomingGoodsProcess({ commit }, { formData, userData }) {
     let token = setDecryptCookie('TOKEN', null);
     let headerConfig = {
       headers: {
@@ -212,10 +212,10 @@ const actions = {
     };
 
     // eslint-disable-next-line no-undef
-    const reqSaveIncomingGoods = await axios.post(`${process.env.VUE_APP_BASE_API}/product-storage/incoming-goods`, data, headerConfig);
+    const reqSaveIncomingGoods = await axios.post(`${process.env.VUE_APP_BASE_API}/product-storage/incoming-goods`, formData, headerConfig);
     const resSaveIncomingGoods = await reqSaveIncomingGoods.data;
     if (resSaveIncomingGoods.code === 201) {
-      commit('setProductCreated', resSaveIncomingGoods.data.product);
+      commit('setIncomingGoods', { data: resSaveIncomingGoods.data, userData });
     }
     return resSaveIncomingGoods;
   },
@@ -231,14 +231,36 @@ const actions = {
     const reqSaveExitingItem = await axios.post(`${process.env.VUE_APP_BASE_API}/product-storage/exit-item`, data, headerConfig);
     const resSaveExitingItem = await reqSaveExitingItem.data;
     if (resSaveExitingItem.code === 201) {
-      commit('coba', resSaveExitingItem.data);
+      commit('setExitingItem', resSaveExitingItem.data);
     }
     return resSaveExitingItem;
   }
 };
 
 const mutations = {
-  coba(state, data) {
+  setIncomingGoods(state, { data, userData }) {
+    const { id_product, stock, id_store } = data;
+    const userIdStore = userData.id_store;
+
+    let isProduct = state.produk.findIndex((item) => item.id_product === id_product);
+
+    if (isProduct < 0) {
+      // push
+      if (userIdStore === id_store) {
+        let productData = data.product;
+        productData.stock = stock;
+        state.produk.push(productData);
+      } else {
+        alert("Produk Berhasil dikirim ke Tempat Pemyimpanan Tujuan")
+      }
+    } else {
+      // change
+      let productId = state.produk.find((item) => item.id_product === id_product);
+      productId.stock = stock;
+      state.produk[isProduct] = productId
+    }
+  },
+  setExitingItem(state, data) {
     let productId = state.produk.find((item) => {
       return item.id_product === data.dari.id_product
     })

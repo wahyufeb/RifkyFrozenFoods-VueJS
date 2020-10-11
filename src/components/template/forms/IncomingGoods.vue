@@ -65,7 +65,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['produkKeranjang', 'kiosData']),
+    ...mapGetters(['produkKeranjang', 'kiosData', 'userData']),
   },
   methods: {
     ...mapActions(['saveStoreProcess', 'getStores', 'saveIncomingGoodsProcess']),
@@ -90,13 +90,12 @@ export default {
     },
     handleSelect(item) {
       this.formData.id_product = item.id_product;
-      console.log(this.formData)
     },
     closeModalDialog() {
       this.handleDialogVisible();
     },
     submitIncomingGoods() {
-      this.saveIncomingGoodsProcess(this.formData)
+      this.saveIncomingGoodsProcess({formData: this.formData, userData: this.userData})
       .then((response) => {
         if(response.code !== 201){          
           this.$notify.error({
@@ -110,16 +109,20 @@ export default {
             message: response.message,
             offset: 100
           });
+          // setTimeout(() => {
+          //   document.location.reload();
+          // }, 1000);
         }
       })
       .catch((err) => {
-        if(err.response.status === 422) {        
-          this.$notify.error({
-            title: 'Error',
-            message: err.response.data.name[0],
-            offset: 100
-          });
-        }
+        console.log(err)
+        // if(err.response.status === 422) {        
+        //   this.$notify.error({
+        //     title: 'Error',
+        //     message: err.response.data.name[0],
+        //     offset: 100
+        //   });
+        // }
       })
       this.formData.id_product = '';
       this.formData.id_store = '';

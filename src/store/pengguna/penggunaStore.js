@@ -85,8 +85,6 @@ const actions = {
 
 const mutations = {
   setUserCreated(state, { type, data }) {
-    console.log(type)
-    console.log(data)
     if (type === 'admin') state.pengguna.admin.push(data);
     if (type === 'warehouse') state.pengguna.warehouse.push(data);
     if (type === 'cashier') state.pengguna.cashier.push(data);
