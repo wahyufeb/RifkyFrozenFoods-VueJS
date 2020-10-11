@@ -32,7 +32,7 @@ const actions = {
   addProduct({ commit }, data) {
     commit('addProduct', data);
   },
-  async saveInvoiceProcess({ commit, dispatch }, data) {
+  async saveInvoiceProcess({ dispatch }, data) {
     const { invoice, keranjangBelanja } = data;
     let token = setDecryptCookie('TOKEN', null);
     let headerConfig = {
@@ -46,7 +46,6 @@ const actions = {
     const resSaveInvoice = await reqSaveInvoice.data;
 
     if (resSaveInvoice.code === 201) {
-      commit('setSaveInvoice', resSaveInvoice.data);
       keranjangBelanja.map((item) => {
         const transactionData = {
           id_invoice: resSaveInvoice.data.id_invoice,
@@ -103,11 +102,6 @@ const mutations = {
     } else {
       state.keranjang.find(item => item.id_product == a.id_product);
     }
-  },
-  setSaveInvoice(state, data) {
-    console.log("============= 💖 =============");
-    console.log(data)
-    console.log("============= 💻 =============");
   },
   setTransactionCreated(state) {
     state.keranjang = [];

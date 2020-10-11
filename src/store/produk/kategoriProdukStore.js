@@ -15,12 +15,12 @@ const getters = {
 const actions = {
   async productCategories({ commit }) {
     let token = setDecryptCookie('TOKEN', null);
-    const reqCategories = await axios.get(`${process.env.VUE_APP_BASE_API}/product-category/`, {
+    const reqCategories = await fetch(`${process.env.VUE_APP_BASE_API}/product-category`, {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       }
     });
-    const resCategories = await reqCategories.data;
+    const resCategories = await reqCategories.json();
     if (resCategories.code === 200) {
       commit('setCategory', resCategories.data);
     }
@@ -60,7 +60,6 @@ const mutations = {
     state.kategori.push(data);
   },
   setCategoryDeleted(state, id_product_category) {
-    console.log(id_product_category)
     state.kategori = state.kategori.filter((categoryItem) => categoryItem.id_product_category !== id_product_category);
   }
 };

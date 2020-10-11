@@ -126,10 +126,11 @@ export default {
         }
       })
       .catch((err) => {
-        if(err.response.status === 422) {        
+        console.log(err)
+        if(err) {        
           this.$notify.error({
             title: 'Error',
-            message: err.response.data.name[0],
+            message: "Error",
             offset: 100
           });
         }

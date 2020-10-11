@@ -110,7 +110,6 @@ export default {
         this.$store.state.produk.produkTerfilter = [];
         this.getProductStorageByStoreId(id_store)
         .then((response) => {
-          console.error(response);
           if(response.code === 200 || response.code === 404){
             this.handleLoadingData(false);
           }
